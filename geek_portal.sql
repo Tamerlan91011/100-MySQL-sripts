@@ -34,7 +34,7 @@ where `id` = 9;
 select * from `event` where fandom_id = 1;
 
 -- 7.Показать все новости (с учетом изменений имеется ввиду события)
-select `text`,`date`,`links`,`name` as 'Fandom name' from `event`,`fandom` where fandom_id = fandom.idfandom;
+select `text`,`date`,`links`,`name` as 'Fandom name' from `event` join `fandom` where fandom_id = fandom.idfandom;
 
 -- 8.Показать конкретную статью (с указанным заголовком)
 select `title`,`text` from article where `title` ='Lifehacks in "Jojo: Golden Eye"';
@@ -42,12 +42,12 @@ select `title`,`text` from article where `title` ='Lifehacks in "Jojo: Golden Ey
 -- 9.Показать описание выбранного плагина (мы вибираем номер плагина и по нему смотрим описание)
 -- Описанием здесь считается команда и его скрипт
 SELECT `idplugin`,`gamecube`,`description`,`commands`,`scripts` 
-FROM geek_portal.plugin,geek_portal.tool 
+FROM `plugin` join `tool`
 WHERE idplugin = plugin_id;
 
 -- 10. Показать игровые события (и всех его участников)
 SELECT `name` as 'members',`title`,`description` 
-FROM geek_portal.members_of_role_game_event,geek_portal.user, geek_portal.role_game_event
+FROM geek_portal.members_of_role_game_event,geek_portal.user JOIN geek_portal.role_game_event
 where user_id = iduser 
 and role_game_event_id = idrole_game_event;
 
@@ -55,7 +55,7 @@ and role_game_event_id = idrole_game_event;
 -- АНАЛИТИЧЕСКИЕ ЗАПРОСЫ -- 
 -- 11. Показать, сколько статей в выбранном фандоме (Фандоме "Stell ball run")
 SELECT COUNT(*) as 'Articles in fandom',`name` 
-FROM geek_portal.forum, geek_portal.fandom 
+FROM geek_portal.forum join geek_portal.fandom 
 where 
 fandom_id=9
 and 
@@ -104,5 +104,14 @@ WHERE (`idchat` = '10');
 delete from `message` where `idmessage` =10;
 delete from `article` where `title` = 'Text';
 delete from `event` where `text` = 'Welcome to the Our Event!';
+
+ALTER TABLE `message` 
+RENAME TO `messages` ;
+
+ALTER TABLE `user` 
+RENAME TO  `users`;
+
+ALTER TABLE `event`
+RENAME TO `events`;
 
 -- Работа с датами
