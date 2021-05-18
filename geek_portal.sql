@@ -53,7 +53,7 @@ and role_game_event_id = idrole_game_event;
 
 -- АНАЛИТИЧЕСКИЕ ЗАПРОСЫ:
 -- 11. Показать, сколько статей в выбранном фандоме (Фандоме "Stell ball run")
-SELECT COUNT(*) as 'Articles in fandom',`idfandom`,`name` 
+SELECT COUNT(*) as 'Articles in fandom',`name` 
 FROM geek_portal.forum, geek_portal.fandom 
 where 
 fandom_id=9
