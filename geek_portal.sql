@@ -6,7 +6,7 @@ select * from `article`;
 alter table `article` auto_increment = 10;
 insert into `article` (`title`,`text`,`user_id`,`forum_id`) value ('Lifehacks in "Jojo: Golden Eye"','Bon Jiorno, my friends!...','7','9');
 
--- 2.Добавить новый форум внутри выбранного фандома (ПОМЕНЯТЬ)
+-- 2.Добавить новый форум внутри выбранного фандома
 -- Пришлось изменить запрос, так как добавился новый фандом, но не раздел внутри уже существующего фандома
 insert into `fandom` (`idfandom`,`category`,`name`) value (11,'videogames','Jojo: Golden Eye');
 delete from `fandom` where `idfandom` = 11;
