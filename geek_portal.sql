@@ -81,7 +81,7 @@ select count(`id`)/count(distinct`user_id`) as 'avg num of chars to user' from g
 -- ПРОЧИЕ ЗАПРОСЫ -- 
 -- Изменение некорректных данных (UPDATE)
 UPDATE `geek_portal`.`article` 
-SET `text` = 'Let me introduce you my comrads' 
+SET `text` = 'Let me introduce you my comrades' 
 WHERE (`idarticle` = '8');
 
 UPDATE `geek_portal`.`article` 
@@ -99,3 +99,10 @@ WHERE (`idarticle` = '12');
 UPDATE `geek_portal`.`chat` 
 SET `chat_name` = 'Discord pals from Server' 
 WHERE (`idchat` = '10');
+
+-- Удаление некорректных данных
+delete from `message` where `idmessage` =10;
+delete from `article` where `title` = 'Text';
+delete from `event` where `text` = 'Welcome to the Our Event!';
+
+-- Работа с датами
