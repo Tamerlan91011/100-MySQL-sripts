@@ -114,4 +114,7 @@ RENAME TO  `users`;
 ALTER TABLE `event`
 RENAME TO `events`;
 
--- Работа с датами
+-- Работа с датами и строками (просмотр сообщений за 2001 год, за январь и написание сообщения)
+select * from message where `date` like '%2001%';
+select * from message where monthname(`date`) = 'January';
+insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
