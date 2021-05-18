@@ -37,7 +37,7 @@ select * from `event` where fandom_id = 1;
 select `text`,`date`,`links`,`name` as 'Fandom name' from `event` join `fandom` where fandom_id = fandom.idfandom;
 
 -- 8.Показать конкретную статью (с указанным заголовком)
-select `title`,`text` from article where `title` ='Lifehacks in "Jojo: Golden Eye"';
+select `title`,`text` from article where `title` like '%Lifehacks in "Jojo: Golden Eye%';
 
 -- 9.Показать описание выбранного плагина (мы вибираем номер плагина и по нему смотрим описание)
 -- Описанием здесь считается команда и его скрипт
@@ -102,8 +102,8 @@ WHERE (`idchat` = '10');
 
 -- Удаление некорректных данных
 delete from `message` where `idmessage` =10;
-delete from `article` where `title` = 'Text';
-delete from `event` where `text` = 'Welcome to the Our Event!';
+delete from `article` where `title` like '%Text%';
+delete from `event` where `text` like '%Welcome to the Our Event!%';
 
 ALTER TABLE `message` 
 RENAME TO `messages` ;
@@ -115,6 +115,10 @@ ALTER TABLE `event`
 RENAME TO `events`;
 
 -- Работа с датами и строками (просмотр сообщений за 2001 год, за январь и написание сообщения)
-select * from message where `date` like '%2001%';
-select * from message where monthname(`date`) = 'January';
+select * from `message` where `date` like '%2001%';
+select * from `message` where monthname(`date`) = 'January';
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
+select * from `message` where `text` like '%hello%';
+
+-- Копирование данных
+insert into `plugin`(`description`) select `scripts` from `tool`;
