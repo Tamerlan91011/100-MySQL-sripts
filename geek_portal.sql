@@ -30,7 +30,7 @@ where `id` = 9;
 
 -- СПРАВОЧНЫЕ ЗАПРОСЫ:
 -- 6.Показать новости текущего фандома (с учетом изменений имеется ввиду событие (event))
-select * from `event` where event.fandom_id = 1;
+select * from `event` where fandom_id = 1;
 
 -- 7.Показать все новости (с учетом изменений имеется ввиду события)
 select `text`,`date`,`links`,`name` as 'Fandom name' from `event`,`fandom` where fandom_id = fandom.idfandom;
