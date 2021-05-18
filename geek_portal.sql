@@ -30,13 +30,10 @@ where `id` = 9;
 
 -- СПРАВОЧНЫЕ ЗАПРОСЫ:
 -- 6.Показать новости текущего фандома (с учетом изменений имеется ввиду событие (event))
--- ЧТО НУЖНО ДОДЕЛАТЬ: СДЕЛАТЬ ТАК, ЧТОБЫ ID НЕ ДУБЛИРОВАЛИСЬ, 
--- и чтобы показывались новости только выбранного фандома
-select * from `event`, `fandom` where event.fandom_id = fandom.idfandom; 
+select * from `event` where event.fandom_id = 1;
 
 -- 7.Показать все новости (с учетом изменений имеется ввиду события)
--- ДОДЕЛАТЬ: СДЕЛАТЬ ТАК, ЧТОБЫ НЕ ДУБЛИРОВАЛИСЬ ID
-select * from `event`, `fandom` where event.fandom_id = fandom.idfandom;
+select `text`,`date`,`links`,`name` as 'Fandom name' from `event`,`fandom` where fandom_id = fandom.idfandom;
 
 -- 8.Показать конкретную статью (с указанным заголовком)
 select `title`,`text` from article where `title` ='Lifehacks in "Jojo: Golden Eye"';
