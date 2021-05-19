@@ -39,7 +39,7 @@ select `text`,`date`,`links`,`name` as 'Fandom name' from `event` join `fandom` 
 -- 8.Показать конкретную статью (с указанным заголовком)
 select `title`,`text` from article where `title` like '%Lifehacks in "Jojo: Golden Eye%';
 
--- 9.Показать описание выбранного плагина (мы вибираем номер плагина и по нему смотрим описание)
+-- 9.Показать описание плагина (мы вибираем номер плагина и по нему смотрим описание)
 -- Описанием здесь считается команда и его скрипт
 SELECT `idplugin`,`gamecube`,`description`,`commands`,`scripts` 
 FROM `plugin` join `tool`
@@ -79,7 +79,7 @@ select count(`rchat_id`)/count(distinct `rchat_id`) from `using_tool`;
 select count(`id`)/count(distinct`user_id`) as 'avg num of chars to user' from geek_portal.character;
 
 -- ПРОЧИЕ ЗАПРОСЫ -- 
--- Изменение некорректных данных (UPDATE)
+-- 1. Изменение некорректных данных (UPDATE)
 UPDATE `geek_portal`.`article` 
 SET `text` = 'Let me introduce you my comrades' 
 WHERE (`idarticle` = '8');
@@ -100,7 +100,7 @@ UPDATE `geek_portal`.`chat`
 SET `chat_name` = 'Discord pals from Server' 
 WHERE (`idchat` = '10');
 
--- Удаление некорректных данных (Delete)
+-- 2.Удаление некорректных данных (Delete)
 delete from `message` where `idmessage` =10;
 delete from `article` where `title` like '%Text%';
 delete from `event` where `text` like '%Welcome to the Our Event!%';
@@ -114,15 +114,42 @@ RENAME TO  `users`;
 ALTER TABLE `event`
 RENAME TO `events`;
 
--- Работа с датами и строками 
+-- 3. Работа с датами и строками 
 -- (просмотр сообщений за 2001 год, за январь, написание сообщения, и просмотр всех сообщений, где есть hello)
 select * from `message` where `date` like '%2001%';
 select * from `message` where monthname(`date`) = 'January';
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
 select * from `message` where `text` like '%hello%';
 
+-- 4. Копирование данных
 -- Копирование скриптов в описание новых плагинов И 
 -- копирование описания персонажей в сообщения
 insert into `plugin`(`description`) select `scripts` from `tool`;
 insert into `message`(`text`,`user_id`,`chat_id`,`date`) 
 select `description`,`user_id`,`rchat_id`,now() from `character`;
+
+-- 5. Соединение таблиц для статистики (JOIN"ы)
+-- 6. Группировка по разным признакам (Group by)
+-- 7. Объединение таблиц (Union)
+
+-- 8. Выборка с all, any, exists
+-- Показать пользователей, кто оставил ссылку в событии 
+-- Условимся, что в рамках данной работы одно событие - это одна ссылка
+select `iduser`,`name`from `user` 
+where exists
+(select `links` from `event` where `links` is not null 
+and
+`user_id`=`iduser`);
+
+-- Вывести пользователей, кто писал сообщения, содержащие слово "text"
+select `iduser`,`name` from `user` 
+where `iduser`= any
+(select `user_id` from `message` where `text` like '%text%');
+
+-- Показать все плагины, чьи id будут больше всех id из инструментов
+select * from `plugin` 
+where `idplugin` > all
+(select `id` from `tool`);
+
+-- 9. Group_Concat и прочие функции
+-- 10. Сложные многослойные запросы
