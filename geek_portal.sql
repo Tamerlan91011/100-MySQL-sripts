@@ -100,7 +100,7 @@ UPDATE `geek_portal`.`chat`
 SET `chat_name` = 'Discord pals from Server' 
 WHERE (`idchat` = '10');
 
--- Удаление некорректных данных
+-- Удаление некорректных данных (Delete)
 delete from `message` where `idmessage` =10;
 delete from `article` where `title` like '%Text%';
 delete from `event` where `text` like '%Welcome to the Our Event!%';
@@ -114,11 +114,15 @@ RENAME TO  `users`;
 ALTER TABLE `event`
 RENAME TO `events`;
 
--- Работа с датами и строками (просмотр сообщений за 2001 год, за январь и написание сообщения)
+-- Работа с датами и строками 
+-- (просмотр сообщений за 2001 год, за январь, написание сообщения, и просмотр всех сообщений, где есть hello)
 select * from `message` where `date` like '%2001%';
 select * from `message` where monthname(`date`) = 'January';
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
 select * from `message` where `text` like '%hello%';
 
--- Копирование данных
+-- Копирование скриптов в описание новых плагинов И 
+-- копирование описания персонажей в сообщения
 insert into `plugin`(`description`) select `scripts` from `tool`;
+insert into `message`(`text`,`user_id`,`chat_id`,`date`) 
+select `description`,`user_id`,`rchat_id`,now() from `character`;
