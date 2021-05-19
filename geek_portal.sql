@@ -1,4 +1,4 @@
--- 15 ЗАПРОСОВ ИЗ ФУНКЦИОНАЛЬНЫХ ТРЕБОВАНИЙ --
+-- ЗАПРОСЫ ИЗ ФУНКЦИОНАЛЬНЫХ ТРЕБОВАНИЙ --
 -- ТРАНЗАКЦИОННЫЕ ЗАПРОСЫ -- 
 -- 1.Добавить статью на форум
 use `geek_portal`;
@@ -79,62 +79,68 @@ select count(`rchat_id`)/count(distinct `rchat_id`) from `using_tool`;
 select count(`id`)/count(distinct`user_id`) as 'avg num of chars to user' from geek_portal.character;
 
 -- ПРОЧИЕ ЗАПРОСЫ -- 
--- 1. Изменение некорректных данных (UPDATE)
+-- 16. Изменение некорректных данных (UPDATE)
 UPDATE `geek_portal`.`article` 
 SET `text` = 'Let me introduce you my comrades' 
 WHERE (`idarticle` = '8');
 
+-- 17.
 UPDATE `geek_portal`.`article` 
 SET `text` = 'I\'m Jack Hidden, and this is my blog.' 
 WHERE (`idarticle` = '9');
 
+-- 18.
 UPDATE `geek_portal`.`article` 
 SET `title` = 'Lifehacks in "Jojo: Golden Eye" Part 1', `text` = 'Bon Jiorno, my friends! I\'m Coule Joestar.' 
 WHERE (`idarticle` = '11');
 
+-- 19.
 UPDATE `geek_portal`.`article` 
 SET `title` = 'Lifehacks in "Jojo: Golden Eye" Part 2', `text` = 'Bon Jiorno, my friends! ' 
 WHERE (`idarticle` = '12');
 
+-- 20.
 UPDATE `geek_portal`.`chat` 
 SET `chat_name` = 'Discord pals from Server' 
 WHERE (`idchat` = '10');
 
--- 2.Удаление некорректных данных (Delete)
+-- Удаление некорректных данных (Delete) --
+-- 21.
 delete from `message` where `idmessage` =10;
+-- 22.
 delete from `article` where `title` like '%Text%';
+-- 23.
 delete from `event` where `text` like '%Welcome to the Our Event!%';
 
-ALTER TABLE `message` 
-RENAME TO `messages` ;
 
-ALTER TABLE `user` 
-RENAME TO  `users`;
-
-ALTER TABLE `event`
-RENAME TO `events`;
-
--- 3. Работа с датами и строками 
+-- Работа с датами и строками --
 -- (просмотр сообщений за 2001 год, за январь, написание сообщения, и просмотр всех сообщений, где есть hello)
+-- 24.
 select * from `message` where `date` like '%2001%';
+-- 25.
 select * from `message` where monthname(`date`) = 'January';
+-- 26.
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
+-- 27.
 select * from `message` where `text` like '%hello%';
 
--- 4. Копирование данных
+-- Копирование данных -- 
 -- Копирование скриптов в описание новых плагинов И 
 -- копирование описания персонажей в сообщения
+-- 30.
 insert into `plugin`(`description`) select `scripts` from `tool`;
+-- 31.
 insert into `message`(`text`,`user_id`,`chat_id`,`date`) 
 select `description`,`user_id`,`rchat_id`,now() from `character`;
 
--- 5. Соединение таблиц для статистики (JOIN"ы)
--- 6. Группировка по разным признакам (Group by)
--- 7. Объединение таблиц (Union)
+-- Соединение таблиц для статистики (JOIN"ы) -- 
+-- Группировка по разным признакам (Group by) -- 
+-- Объединение таблиц (Union) --
 
--- 8. Выборка с all, any, exists
+-- Выборка с all, any, exists -- 
 -- Показать пользователей, кто оставил ссылку в событии 
 -- Условимся, что в рамках данной работы одно событие - это одна ссылка
+
 select `iduser`,`name`from `user` 
 where exists
 (select `links` from `event` where `links` is not null 
@@ -151,5 +157,7 @@ select * from `plugin`
 where `idplugin` > all
 (select `id` from `tool`);
 
--- 9. Group_Concat и прочие функции
--- 10. Сложные многослойные запросы
+-- Group_Concat и прочие функции --
+
+
+-- Сложные многослойные запросы --
