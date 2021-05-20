@@ -11,7 +11,7 @@ insert into `article` (`title`,`text`,`user_id`,`forum_id`) value ('Lifehacks in
 insert into `fandom` (`idfandom`,`category`,`name`) value (11,'videogames','Jojo: Golden Eye');
 delete from `fandom` where `idfandom` = 11;
 alter table `fandom` auto_increment = 10;
-insert into `forum` (`idforum`,`section`,`name`,`fandom_id`) value (11,'Guides','Jojo: Golden Eye',9);
+insert into `forum` (`idforum`,`section`,`forum_name`,`fandom_id`) value (11,'Guides','Jojo: Golden Eye',9);
 
 -- 3.Добавить нового персонажа
 insert into `character` (`id`,`rchat_id`,`user_id`,`name`,`initials`,`life_status`,`description`) 
@@ -134,13 +134,42 @@ insert into `message`(`text`,`user_id`,`chat_id`,`date`)
 select `description`,`user_id`,`rchat_id`,now() from `character`;
 
 -- Соединение таблиц для статистики (JOIN"ы) -- 
+-- 32. Вывод всех сообщений, напечатанных пользователями.
+select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
+from `user` inner join `message` on `iduser` = `user_id`;
+
+-- 33. Вывод сообщений, напечатанных конкретным пользователем.
+select `iduser`,`name`,`gender`,`date`,`text` 
+from `user` join `message` on `iduser` = `user_id` and `iduser`=4; 
+
+-- 34. Показ пользователей, которые создавали и не создавали персонажей
+select * from `user` left join `character` on `user_id` = `iduser`;
+
+-- 35. Показатеть пользователей, убивших своих персонажей
+select * 
+from `user` 
+right join `character` on `iduser` = `user_id` 
+and `life_status` =0;
+
+-- 36. Показать пользователей, кто записал системные инициалы персонажа (символ С и порядковый номер)
+select * from `user` left join `character` on `iduser` = `user_id` and `initials` like '%C%';
+
+-- 37. Показать, в каких чатах обитают персонажи
+select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name` 
+from `character` right join `chat` on `rchat_id`=`idchat`
+union
+(select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name`  
+from `character` left join `chat` on `rchat_id` = `idchat`);
+
+-- 38. Показать, в каких чатах участвуют пользователи
+select * from `user` left join `chat_members` on `user_id`=`iduser`;
 -- Группировка по разным признакам (Group by) -- 
+
 -- Объединение таблиц (Union) --
 
 -- Выборка с all, any, exists -- 
 -- Показать пользователей, кто оставил ссылку в событии 
 -- Условимся, что в рамках данной работы одно событие - это одна ссылка
-
 select `iduser`,`name`from `user` 
 where exists
 (select `links` from `event` where `links` is not null 
