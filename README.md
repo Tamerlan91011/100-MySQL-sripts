@@ -4,8 +4,8 @@
 Made by student of IVT-262 group:
 Glazunov Timur
 
-[1.Text of scripts](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/blob/master/geek_portal.sql)
+* [Text of scripts](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/blob/master/geek_portal.sql)
 
-[2.History](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/commits/master/geek_portal.sql)
+* [History](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/commits/master/geek_portal.sql)
 
-[3.Backup](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/blob/47e59f6b3801305a685b331976ea650c3f6873a4/geek_portal%20(3).sql)
+* [Backup](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/blob/47e59f6b3801305a685b331976ea650c3f6873a4/geek_portal%20(3).sql)
