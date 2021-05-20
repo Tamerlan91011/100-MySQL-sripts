@@ -84,45 +84,51 @@ UPDATE `geek_portal`.`article`
 SET `text` = 'Let me introduce you my comrades' 
 WHERE (`idarticle` = '8');
 
--- 17.
+-- 17.Изменение текста статьи
 UPDATE `geek_portal`.`article` 
 SET `text` = 'I\'m Jack Hidden, and this is my blog.' 
 WHERE (`idarticle` = '9');
 
--- 18.
+-- 18.Изменение текста статьи
 UPDATE `geek_portal`.`article` 
 SET `title` = 'Lifehacks in "Jojo: Golden Eye" Part 1', `text` = 'Bon Jiorno, my friends! I\'m Coule Joestar.' 
 WHERE (`idarticle` = '11');
 
--- 19.
+-- 19.Изменение заголовка статьи
 UPDATE `geek_portal`.`article` 
 SET `title` = 'Lifehacks in "Jojo: Golden Eye" Part 2', `text` = 'Bon Jiorno, my friends! ' 
 WHERE (`idarticle` = '12');
 
--- 20.
+-- 20.Изменение названия чата
 UPDATE `geek_portal`.`chat` 
 SET `chat_name` = 'Discord pals from Server' 
 WHERE (`idchat` = '10');
 
 -- Удаление некорректных данных (Delete) --
--- 21.
+-- 21.Удалить сообщение, чьё id
 delete from `message` where `idmessage` =10;
--- 22.
+
+-- 22.Удалить статьи, чьи заголовки содержат слово "Text"
 delete from `article` where `title` like '%Text%';
--- 23.
+
+-- 23.Удалить события, чье содержание стандартно
 delete from `event` where `text` like '%Welcome to the Our Event!%';
 
 
 -- Работа с датами и строками --
--- (просмотр сообщений за 2001 год, за январь, написание сообщения, и просмотр всех сообщений, где есть hello)
--- 24.
+
+-- 24.просмотр сообщений за 2001 год
 select * from `message` where `date` like '%2001%';
--- 25.
+
+-- 25.за январь
 select * from `message` where monthname(`date`) = 'January';
--- 26.
+
+-- 26.написание сообщения
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
--- 27.
+
+-- 27.просмотр всех сообщений, где есть hello
 select * from `message` where `text` like '%hello%';
+
 
 -- Копирование данных -- 
 
@@ -135,7 +141,9 @@ select `description`,`user_id`,`rchat_id`,now() from `character`;
 insert into `chat_members`(`chat_id`,`user_id`)
 select `rchat_id`,`character`.`user_id` from`character` where `rchat_id`!=`user_id`;
 
+
 -- Соединение таблиц для статистики (JOIN"ы) -- 
+
 -- 33. Вывод всех сообщений, напечатанных пользователями.
 select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
 from `user` inner join `message` on `iduser` = `user_id`;
