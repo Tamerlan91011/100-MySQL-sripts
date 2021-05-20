@@ -3,7 +3,7 @@
 -- 1.Добавить статью на форум
 use `geek_portal`;
 select * from `article`;
-alter table `article` auto_increment = 10;
+alter table `article` auto_increment = 10; 
 insert into `article` (`title`,`text`,`user_id`,`forum_id`) value ('Lifehacks in "Jojo: Golden Eye"','Bon Jiorno, my friends!...','7','9');
 
 -- 2.Добавить новый форум внутри выбранного фандома
@@ -39,27 +39,25 @@ select `text`,`date`,`links`,`name` as 'Fandom name' from `event` join `fandom` 
 -- 8.Показать конкретную статью (с указанным заголовком)
 select `title`,`text` from article where `title` like '%Lifehacks in "Jojo: Golden Eye%';
 
--- 9.Показать описание плагина (мы вибираем номер плагина и по нему смотрим описание)
+-- 9.Показать описание плагина (мы выбираем номер плагина и по нему смотрим описание)
 -- Описанием здесь считается команда и его скрипт
 SELECT `idplugin`,`gamecube`,`description`,`commands`,`scripts` 
-FROM `plugin` join `tool`
-WHERE idplugin = plugin_id;
+FROM `plugin` 
+join `tool` on idplugin = plugin_id;
 
 -- 10. Показать игровые события (и всех его участников)
 SELECT `name` as 'members',`title`,`description` 
-FROM geek_portal.members_of_role_game_event,geek_portal.user JOIN geek_portal.role_game_event
-where user_id = iduser 
-and role_game_event_id = idrole_game_event;
+FROM members_of_role_game_event
+JOIN user on user_id = iduser
+JOIN role_game_event on role_game_event_id = idrole_game_event;
 
 
 -- АНАЛИТИЧЕСКИЕ ЗАПРОСЫ -- 
 -- 11. Показать, сколько статей в выбранном фандоме (Фандоме "Stell ball run")
 SELECT COUNT(*) as 'Articles in fandom',`name` 
-FROM geek_portal.forum join geek_portal.fandom 
+FROM geek_portal.forum join geek_portal.fandom on idfandom = fandom_id
 where 
-fandom_id=9
-and 
-idfandom = fandom_id;
+fandom_id=9;
 
 -- 12. Показать, сколько всего статей (вообще во всех фандомах)
 SELECT COUNT(*) as 'Sum of articles' FROM geek_portal.article;
@@ -82,7 +80,7 @@ select count(`id`)/count(distinct`user_id`) as 'avg num of chars to user' from g
 -- 16. Изменение некорректных данных (UPDATE)
 UPDATE `geek_portal`.`article` 
 SET `text` = 'Let me introduce you my comrades' 
-WHERE (`idarticle` = '8');
+WHERE `idarticle` = '8';
 
 -- 17.Изменение текста статьи
 UPDATE `geek_portal`.`article` 
@@ -134,9 +132,11 @@ select * from `message` where `text` like '%hello%';
 
 -- 30. Копирование скриптов в описание новых плагинов
 insert into `plugin`(`description`) select `scripts` from `tool`;
+
 -- 31. копирование описания персонажей в сообщения
 insert into `message`(`text`,`user_id`,`chat_id`,`date`) 
 select `description`,`user_id`,`rchat_id`,now() from `character`;
+
 -- 32. Добавление участников в чаты (через персонажей)
 insert into `chat_members`(`chat_id`,`user_id`)
 select `rchat_id`,`character`.`user_id` from`character` where `rchat_id`!=`user_id`;
@@ -150,7 +150,8 @@ from `user` inner join `message` on `iduser` = `user_id`;
 
 -- 34. Вывод сообщений, напечатанных конкретным пользователем.
 select `iduser`,`name`,`gender`,`date`,`text` 
-from `user` join `message` on `iduser` = `user_id` and `iduser`=4; 
+from `user` join `message` on `iduser` = `user_id` 
+where  `iduser`=4; 
 
 -- 35. Показ пользователей, которые создавали и не создавали персонажей
 select * from `user` left join `character` on `user_id` = `iduser`;
@@ -173,6 +174,27 @@ from `character` left join `chat` on `rchat_id` = `idchat`);
 
 -- 39. Показать, в каких чатах участвуют пользователи
 select * from `user` left join `chat_members` on `user_id`=`iduser`;
+
+-- 40. Показать, в каких событиях участвуют пользователи...
+select * from `event` right join `user` on `user_id` = `iduser`;
+
+-- 41. ...к каким фандомам относятся эти события
+select * from `event` right join `fandom` on `fandom_id` = `idfandom`;
+
+-- 42. И одновременно: к каким событиям, а соответсвенно фандомам
+-- относятся пользователи
+select `fandom_id`,`date`,`links`,`text`,`user`.`name` as 'User name',`idfandom`,`category`,`fandom`.`name` as 'Fandom name' 
+from `event` 
+right join `user` on `iduser` = `user_id`
+right join `fandom` on `fandom_id` = `idfandom`;
+
+-- 43. К каким фандомам относятся форумы
+select `section`,`forum_name`,`category`,`name` as 'Fandom name' 
+from `forum` 
+right join `fandom` on `fandom_id` = `idfandom`;
+
+-- 44. К каким форумам относяться статьи
+select * from `article` right join `forum` on `forum_id` = `idforum`;
 -- Группировка по разным признакам (Group by) -- 
 
 -- Объединение таблиц (Union) --
