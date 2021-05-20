@@ -235,8 +235,15 @@ right join `forum` on `forum_id`=`idforum`
 right join `fandom` on `fandom_id` = `idfandom`;
 
 -- 51.(19) Показать сообщения, набранные персонажами
+select `date`,`character`.`name` as 'Name if character',`life_status`,`description`, `text` as 'Character message'
+from `character`
+left join `role_message` on `character_id` = `character`.`id`;
 
 -- 52.(20) Показать пользователей, чьи персонажи отправляли сообщения
+select `date`,`user`.`name` as 'Username',`gender`,`character`.`name` as 'Char name',`life_status`,`description`,`text` as 'Message from char'
+from `user`
+left join `character` on `user_id` = `iduser`
+left join `role_message` on `character_id` = `character`.`id`;
 -- Группировка по разным признакам (Group by) -- 
 
 -- Объединение таблиц (Union) --
