@@ -77,123 +77,124 @@ select count(`rchat_id`)/count(distinct `rchat_id`) from `using_tool`;
 select count(`id`)/count(distinct`user_id`) as 'avg num of chars to user' from geek_portal.character;
 
 -- ПРОЧИЕ ЗАПРОСЫ -- 
--- 16. Изменение некорректных данных (UPDATE)
+-- ИЗМЕНЕНИЕ НЕКОРРЕКТНЫХ ДАННЫХ (UPDATE) --
+-- 16.(1) Изменение некорректных данных
 UPDATE `geek_portal`.`article` 
 SET `text` = 'Let me introduce you my comrades' 
 WHERE `idarticle` = '8';
 
--- 17.Изменение текста статьи
+-- 17.(2) Изменение текста статьи
 UPDATE `geek_portal`.`article` 
 SET `text` = 'I\'m Jack Hidden, and this is my blog.' 
 WHERE (`idarticle` = '9');
 
--- 18.Изменение текста статьи
+-- 18.(3) Изменение текста статьи
 UPDATE `geek_portal`.`article` 
 SET `title` = 'Lifehacks in "Jojo: Golden Eye" Part 1', `text` = 'Bon Jiorno, my friends! I\'m Coule Joestar.' 
 WHERE (`idarticle` = '11');
 
--- 19.Изменение заголовка статьи
+-- 19.(4) Изменение заголовка статьи
 UPDATE `geek_portal`.`article` 
 SET `title` = 'Lifehacks in "Jojo: Golden Eye" Part 2', `text` = 'Bon Jiorno, my friends! ' 
 WHERE (`idarticle` = '12');
 
--- 20.Изменение названия чата
+-- 20.(5) Изменение названия чата
 UPDATE `geek_portal`.`chat` 
 SET `chat_name` = 'Discord pals from Server' 
 WHERE (`idchat` = '10');
 
--- Удаление некорректных данных (Delete) --
--- 21.Удалить сообщение, чьё id
+-- УДАЛЕНИЕ НЕКОРРЕКТНЫХ ДАННЫХ (Delete) --
+-- 21.(1) Удалить сообщение, чьё id
 delete from `message` where `idmessage` =10;
 
--- 22.Удалить статьи, чьи заголовки содержат слово "Text"
+-- 22.(2) Удалить статьи, чьи заголовки содержат слово "Text"
 delete from `article` where `title` like '%Text%';
 
--- 23.Удалить события, чье содержание стандартно
+-- 23.(3) Удалить события, чье содержание стандартно
 delete from `event` where `text` like '%Welcome to the Our Event!%';
 
 
 -- Работа с датами и строками --
 
--- 24.просмотр сообщений за 2001 год
+-- 24.(1) просмотр сообщений за 2001 год
 select * from `message` where `date` like '%2001%';
 
--- 25.за январь
+-- 25.(2) за январь
 select * from `message` where monthname(`date`) = 'January';
 
--- 26.написание сообщения
+-- 26.(3) написание сообщения
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
 
--- 27.просмотр всех сообщений, где есть hello
+-- 27.(4) просмотр всех сообщений, где есть hello
 select * from `message` where `text` like '%hello%';
 
 
--- Копирование данных -- 
+-- КОПИРОВАНИЕ ДАННЫХ -- 
 
--- 30. Копирование скриптов в описание новых плагинов
+-- 30.(1) Копирование скриптов в описание новых плагинов
 insert into `plugin`(`description`) select `scripts` from `tool`;
 
--- 31. копирование описания персонажей в сообщения
+-- 31.(2) копирование описания персонажей в сообщения
 insert into `message`(`text`,`user_id`,`chat_id`,`date`) 
 select `description`,`user_id`,`rchat_id`,now() from `character`;
 
--- 32. Добавление участников в чаты (через персонажей)
+-- 32.(3) Добавление участников в чаты (через персонажей)
 insert into `chat_members`(`chat_id`,`user_id`)
 select `rchat_id`,`character`.`user_id` from`character` where `rchat_id`!=`user_id`;
 
 
--- Соединение таблиц для статистики (JOIN"ы) -- 
+-- СОЕДИНЕНИЕ ТАБЛИЦ ДЛЯ СТАТИСТИКИ И ВЫБОРКА (JOIN"ы) -- 
 
--- 33. Вывод всех сообщений, напечатанных пользователями.
+-- 33.(1) Вывод всех сообщений, напечатанных пользователями.
 select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
 from `user` inner join `message` on `iduser` = `user_id`;
 
--- 34. Вывод сообщений, напечатанных конкретным пользователем.
+-- 34.(2) Вывод сообщений, напечатанных конкретным пользователем.
 select `iduser`,`name`,`gender`,`date`,`text` 
 from `user` join `message` on `iduser` = `user_id` 
 where  `iduser`=4; 
 
--- 35. Показ пользователей, которые создавали и не создавали персонажей
+-- 35.(3) Показ пользователей, которые создавали и не создавали персонажей
 select * from `user` left join `character` on `user_id` = `iduser`;
 
--- 36. Показатеть пользователей, убивших своих персонажей
+-- 36.(4) Показатеть пользователей, убивших своих персонажей
 select * 
 from `user` 
 right join `character` on `iduser` = `user_id` 
 and `life_status` =0;
 
--- 37. Показать пользователей, кто записал системные инициалы персонажа (символ С и порядковый номер)
+-- 37.(5) Показать пользователей, кто записал системные инициалы персонажа (символ С и порядковый номер)
 select * from `user` left join `character` on `iduser` = `user_id` and `initials` like '%C%';
 
--- 38. Показать, в каких чатах обитают персонажи
+-- 38.(6) Показать, в каких чатах обитают персонажи
 select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name` 
 from `character` right join `chat` on `rchat_id`=`idchat`
 union
 (select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name`  
 from `character` left join `chat` on `rchat_id` = `idchat`);
 
--- 39. Показать, в каких чатах участвуют пользователи
+-- 39.(7) Показать, в каких чатах участвуют пользователи
 select * from `user` left join `chat_members` on `user_id`=`iduser`;
 
--- 40. Показать, в каких событиях участвуют пользователи...
+-- 40.(8) Показать, в каких событиях участвуют пользователи...
 select * from `event` right join `user` on `user_id` = `iduser`;
 
--- 41. ...к каким фандомам относятся эти события
+-- 41.(9) ...к каким фандомам относятся эти события
 select * from `event` right join `fandom` on `fandom_id` = `idfandom`;
 
--- 42. И одновременно: к каким событиям, а соответсвенно фандомам
+-- 42.(10) И одновременно: к каким событиям, а соответсвенно фандомам
 -- относятся пользователи
 select `fandom_id`,`date`,`links`,`text`,`user`.`name` as 'User name',`idfandom`,`category`,`fandom`.`name` as 'Fandom name' 
 from `event` 
 right join `user` on `iduser` = `user_id`
 right join `fandom` on `fandom_id` = `idfandom`;
 
--- 43. К каким фандомам относятся форумы
+-- 43.(11) К каким фандомам относятся форумы
 select `section`,`forum_name`,`category`,`name` as 'Fandom name' 
 from `forum` 
 right join `fandom` on `fandom_id` = `idfandom`;
 
--- 44. К каким форумам относяться статьи
+-- 44.(12) К каким форумам относяться статьи
 select * from `article` right join `forum` on `forum_id` = `idforum`;
 -- Группировка по разным признакам (Group by) -- 
 
