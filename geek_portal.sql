@@ -149,7 +149,7 @@ select `rchat_id`,`character`.`user_id` from`character` where `rchat_id`!=`user_
 select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
 from `user` inner join `message` on `iduser` = `user_id`;
 
--- 34.(2) Вывод сообщений, напечатанных конкретным пользователем.
+-- 34.(2) Показ сообщений, напечатанных конкретным пользователем.
 select `iduser`,`name`,`gender`,`date`,`text` 
 from `user` join `message` on `iduser` = `user_id` 
 where  `iduser`=4; 
@@ -157,8 +157,8 @@ where  `iduser`=4;
 -- 35.(3) Показ пользователей, которые создавали и не создавали персонажей
 select * from `user` left join `character` on `user_id` = `iduser`;
 
--- 36.(4) Показатеть пользователей, убивших своих персонажей
-select * 
+-- 36.(4) Показать пользователей, убивших своих персонажей
+select `email`,`user`.`name` as 'Username',`gender`,`rchat_id`,`character`.`name` as 'char_name',`life_status`,`description`
 from `user` 
 right join `character` on `iduser` = `user_id` 
 and `life_status` =0;
@@ -176,14 +176,13 @@ from `character` left join `chat` on `rchat_id` = `idchat`);
 -- 39.(7) Показать, в каких чатах участвуют пользователи
 select * from `user` left join `chat_members` on `user_id`=`iduser`;
 
--- 40.(8) Показать, в каких событиях участвуют пользователи...
+-- 40.(8) Показать, в каких событиях участвуют пользователи
 select * from `event` right join `user` on `user_id` = `iduser`;
 
--- 41.(9) ...к каким фандомам относятся эти события
+-- 41.(9) К каким фандомам относятся события
 select * from `event` right join `fandom` on `fandom_id` = `idfandom`;
 
--- 42.(10) И одновременно: к каким событиям, а соответсвенно фандомам
--- относятся пользователи
+-- 42.(10) К каким событиям, а соответсвенно фандомам относятся пользователи
 select `fandom_id`,`date`,`links`,`text`,`user`.`name` as 'User name',`idfandom`,`category`,`fandom`.`name` as 'Fandom name' 
 from `event` 
 right join `user` on `iduser` = `user_id`
@@ -195,13 +194,28 @@ from `forum`
 right join `fandom` on `fandom_id` = `idfandom`;
 
 -- 44.(12) К каким форумам относяться статьи
-select * from `article` right join `forum` on `forum_id` = `idforum`;
+select `date`,`title` as 'Article title',`links`,`section`,`forum_name` 
+from `article` 
+right join `forum` on `forum_id` = `idforum`;
+
+-- 45.(13) Показать чаты, где используются плагины
+select `id` as 'RoleChat ID',`idplugin`,`Description`
+from `role_chat` 
+right join `using_tool` on `role_chat`.id = `using_tool`.rchat_id
+right join `plugin` on `using_tool`.`plugin_id` = `idplugin`;
+
+-- 46.(14) Показать, какие инструменты используются в плагинах
+select `Description`, `commands`,`gamecube`,`scripts`
+from `plugin`
+left join `tool` on `idplugin` = `plugin_id`;
+
+-- 47.(15) Показать, на каких фандомах основы ролевые чаты
 -- Группировка по разным признакам (Group by) -- 
 
 -- Объединение таблиц (Union) --
 
 -- Выборка с all, any, exists -- 
--- Показать пользователей, кто оставил ссылку в событии 
+-- (1) Показать пользователей, кто оставил ссылку в событии 
 -- Условимся, что в рамках данной работы одно событие - это одна ссылка
 select `iduser`,`name`from `user` 
 where exists
@@ -209,12 +223,12 @@ where exists
 and
 `user_id`=`iduser`);
 
--- Вывести пользователей, кто писал сообщения, содержащие слово "text"
+-- (2) Вывести пользователей, кто писал сообщения, содержащие слово "text"
 select `iduser`,`name` from `user` 
 where `iduser`= any
 (select `user_id` from `message` where `text` like '%text%');
 
--- Показать все плагины, чьи id будут больше всех id из инструментов
+-- (3) Показать все плагины,которые не используют никаких инструментов
 select * from `plugin` 
 where `idplugin` > all
 (select `id` from `tool`);
