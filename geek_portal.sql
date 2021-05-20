@@ -210,6 +210,24 @@ from `plugin`
 left join `tool` on `idplugin` = `plugin_id`;
 
 -- 47.(15) Показать, на каких фандомах основы ролевые чаты
+select `id` as 'Rolechat id',`category`,`name` as 'Fandom name'
+from `role_chat`
+right join `fandom_based_rchats` on `role_chat`.`id` = `fandom_based_rchats`.`rchat_id`
+right join `fandom` on `fandom_id` = `idfandom`;
+
+-- 48.(16) Показать сообщения, которые отсылались в ролевых чатах, основанных на фандомах
+select `date`,`text` as 'Message',`category`,`name` as 'Fandomname'
+from `message` 
+right join `fandom_based_rchats` on `rchat_id`=`chat_id`
+right join `fandom` on `fandom_id`=`idfandom`;
+
+-- 49.(17) Показать пользователя и его сообщение в чатах, основанных на фандомах
+select `chat_id` as 'Number of chat',`date`,`user`.`name` as 'Username',`gender`,`text` as 'Text of message',`fandom`.`name` as 'Fandom name',`category`
+from `message` 
+right join `fandom_based_rchats` on `rchat_id`=`chat_id`
+right join `fandom` on `fandom_id`=`idfandom`
+left join `user` on `user_id` = `iduser`;
+
 -- Группировка по разным признакам (Group by) -- 
 
 -- Объединение таблиц (Union) --
