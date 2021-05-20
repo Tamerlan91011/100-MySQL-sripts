@@ -47,15 +47,15 @@ join `tool` on idplugin = plugin_id;
 
 -- 10. Показать игровые события (и всех его участников)
 SELECT `name` as 'members',`title`,`description` 
-FROM members_of_role_game_event
-JOIN user on user_id = iduser
-JOIN role_game_event on role_game_event_id = idrole_game_event;
+FROM `members_of_role_game_event`
+JOIN `user` on `user_id` = `iduser`
+JOIN `role_game_event` on `role_game_event_id` = `idrole_game_event`;
 
 
 -- АНАЛИТИЧЕСКИЕ ЗАПРОСЫ -- 
 -- 11. Показать, сколько статей в выбранном фандоме (Фандоме "Stell ball run")
 SELECT COUNT(*) as 'Articles in fandom',`name` 
-FROM geek_portal.forum join geek_portal.fandom on idfandom = fandom_id
+FROM `forum` join `fandom` on `fandom_id` = `idfandom`
 where 
 fandom_id=9;
 
@@ -228,6 +228,15 @@ right join `fandom_based_rchats` on `rchat_id`=`chat_id`
 right join `fandom` on `fandom_id`=`idfandom`
 left join `user` on `user_id` = `iduser`;
 
+-- 50.(18) Показать, к каким форумам, которые основаны на фандомах, относятся статьи
+select `date`,`section` as 'Forum section',`forum_name`,`title`,`text` as 'Text of article',`category` as 'Fandom Category',`fandom`.`name` as 'Fandom name'
+from `article`
+right join `forum` on `forum_id`=`idforum`
+right join `fandom` on `fandom_id` = `idfandom`;
+
+-- 51.(19) Показать сообщения, набранные персонажами
+
+-- 52.(20) Показать пользователей, чьи персонажи отправляли сообщения
 -- Группировка по разным признакам (Group by) -- 
 
 -- Объединение таблиц (Union) --
