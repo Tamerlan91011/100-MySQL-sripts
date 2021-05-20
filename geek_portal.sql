@@ -154,7 +154,7 @@ select `iduser`,`name`,`gender`,`date`,`text`
 from `user` join `message` on `iduser` = `user_id` 
 where  `iduser`=4; 
 
--- 35.(3) Показ пользователей, которые создавали и не создавали персонажей
+-- 35.(3) Показать пользователей, которые создавали и не создавали персонажей
 select * from `user` left join `character` on `user_id` = `iduser`;
 
 -- 36.(4) Показать пользователей, убивших своих персонажей
@@ -188,12 +188,12 @@ from `event`
 right join `user` on `iduser` = `user_id`
 right join `fandom` on `fandom_id` = `idfandom`;
 
--- 43.(11) К каким фандомам относятся форумы
+-- 43.(11) Показать к каким фандомам относятся форумы
 select `section`,`forum_name`,`category`,`name` as 'Fandom name' 
 from `forum` 
 right join `fandom` on `fandom_id` = `idfandom`;
 
--- 44.(12) К каким форумам относяться статьи
+-- 44.(12) Показать к каким форумам относяться статьи
 select `date`,`title` as 'Article title',`links`,`section`,`forum_name` 
 from `article` 
 right join `forum` on `forum_id` = `idforum`;
@@ -204,24 +204,24 @@ from `role_chat`
 right join `using_tool` on `role_chat`.id = `using_tool`.rchat_id
 right join `plugin` on `using_tool`.`plugin_id` = `idplugin`;
 
--- 46.(14) Показать, какие инструменты используются в плагинах
+-- 46.(14) Показать какие инструменты используются в плагинах
 select `Description`, `commands`,`gamecube`,`scripts`
 from `plugin`
 left join `tool` on `idplugin` = `plugin_id`;
 
--- 47.(15) Показать, на каких фандомах основы ролевые чаты
+-- 47.(15) Показать на каких фандомах основы ролевые чаты
 select `id` as 'Rolechat id',`category`,`name` as 'Fandom name'
 from `role_chat`
 right join `fandom_based_rchats` on `role_chat`.`id` = `fandom_based_rchats`.`rchat_id`
 right join `fandom` on `fandom_id` = `idfandom`;
 
--- 48.(16) Показать сообщения, которые отсылались в ролевых чатах, основанных на фандомах
+-- 48.(16) Показать СООБЩЕНИЯ, которые отсылались в ролевых чатах, основанных на фандомах
 select `date`,`text` as 'Message',`category`,`name` as 'Fandomname'
 from `message` 
 right join `fandom_based_rchats` on `rchat_id`=`chat_id`
 right join `fandom` on `fandom_id`=`idfandom`;
 
--- 49.(17) Показать пользователя и его сообщение в чатах, основанных на фандомах
+-- 49.(17) Показать ПОЛЬЗОВАТЕЛЯ и его СООБЩЕНИЯ в чатах, основанных на фандомах
 select `chat_id` as 'Number of chat',`date`,`user`.`name` as 'Username',`gender`,`text` as 'Text of message',`fandom`.`name` as 'Fandom name',`category`
 from `message` 
 right join `fandom_based_rchats` on `rchat_id`=`chat_id`
@@ -244,11 +244,35 @@ select `date`,`user`.`name` as 'Username',`gender`,`character`.`name` as 'Char n
 from `user`
 left join `character` on `user_id` = `iduser`
 left join `role_message` on `character_id` = `character`.`id`;
--- Группировка по разным признакам (Group by) -- 
 
--- Объединение таблиц (Union) --
+-- ГРУППИРОВКА И СОРТИРОВКА ПО РАЗНЫМ ПРИЗНАКАМ (Group by) -- 
+-- 53.(1) Показать пользователей, чьи персонажи (СНАЧАЛА ЖИВЫЕ) отправляли сообщения. 
+select `date`,`user`.`name` as 'Username',`gender`,`character`.`name` as 'Char name',`life_status`,`description`,`text` as 'Message from char'
+from `user`
+left join `character` on `user_id` = `iduser`
+left join `role_message` on `character_id` = `character`.`id`
+order by `life_status` desc;
 
--- Выборка с all, any, exists -- 
+-- 54.(2) Показать сообщения сначала убитых, а потом живых персонажей
+select `date`,`character`.`name` as 'Name if character',`life_status`,`description`, `text` as 'Character message'
+from `character`
+left join `role_message` on `character_id` = `character`.`id`
+order by `life_status`;
+
+-- 55.(3) Показать сначала старые, затем новые сообщения пользователей
+select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
+from `user` inner join `message` on `iduser` = `user_id`
+order by `date`;
+
+-- 56.(4) Показать новые, а затем старые сообщения пользователей
+select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
+from `user` inner join `message` on `iduser` = `user_id`
+order by `date` desc;
+
+-- 57.(5) Отсортировать ролевые чаты по количеству использованных плагинов (от большего к меньшему)
+-- ОБЪЕДИНЕНИЕ ТАБЛИЦ (Union) --
+
+-- ВЫБОРКА С ALL, ANY, EXISTS -- 
 -- (1) Показать пользователей, кто оставил ссылку в событии 
 -- Условимся, что в рамках данной работы одно событие - это одна ссылка
 select `iduser`,`name`from `user` 
@@ -267,7 +291,7 @@ select * from `plugin`
 where `idplugin` > all
 (select `id` from `tool`);
 
--- Group_Concat и прочие функции --
+-- GROUP_CONCAT И ПРОЧИЕ ФУНКЦИИ --
 
 
--- Сложные многослойные запросы --
+-- СЛОЖНЫЕ МНОГОУРОВНЕВЫЕ ЗАПРОСЫ --
