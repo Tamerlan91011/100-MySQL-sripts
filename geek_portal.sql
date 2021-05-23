@@ -114,7 +114,11 @@ delete from `article` where `title` like '%Text%';
 delete from `event` where `text` like '%Welcome to the Our Event!%';
 
 -- 24.(4) Удалить статьи без ссылок
+delete from `article` where `links` is null;
+
 -- 25.(5) Удалить сообщения пользователей, где есть слово text(число)
+delete from `message` where `text` like '%text%';
+
 
 -- SELECT, DISTINCT, WHERE --
 -- 26.(1) просмотр сообщений за 2001 год
@@ -129,23 +133,53 @@ insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timu
 -- 29.(4) просмотр всех сообщений, где есть hello
 select * from `message` where `text` like '%hello%';
 
--- 30.(5) Показать одно уникальное сообщение уникального пользоваетля
--- 31.(6) Показать события со ссылками
--- 32.(7) Показать события без ссылок
--- 33.(8) Показать уникальные ролевые сообщения 
--- 34.(9) Показать игровые события с уникальным описанием
--- 35.(10) Показать по одному форуму уникальных фандомов
--- 36.(11) Показать по одному форумы уникальных категорий 
--- 37.(12) Показать форумы с названиями, в которых встречается словосочетание "How to"
--- 38.(13) Показать одного живого и одно мертвого персонажа
--- 39.(14) Показать по одному персонажу каждого пользователя
--- 40.(15) Показать по одному персонажу каждого ролевого чата
--- 41.(16) Показать по одному используемуму плагину в ролевом чате
--- 42.(17) Показать инструменты с игровыми кубиками
--- 43.(18) Показать инструменты без игровых кубиков
--- 44.(19) Показать инструменты со скриптами персонажей
--- 45.(20) Показать инструменты со скрипатми чата
+-- 30.(5) Убрать все повторяющиеся статьи и показать их текст с названием.
+select distinct `title`,`text` from `article` order by `title`,`text`;
 
+-- 31.(6) Показать события со ссылками
+select * from `event` where `links` is not null;
+
+-- 32.(7) Показать события без ссылок
+select * from `event` where `links` is null;
+
+-- 33.(8) Показать уникальные ролевые сообщения 
+select distinct `text` from `role_message`;
+
+-- 34.(9) Показать игровые события с уникальным описанием
+select distinct `description` from `role_game_event`;
+
+-- 35.(10) Показать уникальные категории внутри фандома
+select distinct `section`,`fandom_id` from `forum` order by `fandom_id`,`section`;
+
+-- 36.(11) Показать категории на форумах
+select distinct `section` from `forum` order by `section`;
+
+-- 37.(12) Показать форумы с названиями, в которых встречается словосочетание "How to"
+select * from `forum` where `forum_name` like '%how to%';
+
+-- 38.(13) Показать сколько пользователей создавало персонажей
+select count(distinct `user_id`) as 'Number of users who created character' from `character`; 
+
+-- 39.(14) Показать персонажей с уникальным описанием (не содержащим text)
+select * from `character` where `description` not like '%text%';
+
+-- 40.(15) Показать количество ролевых чатов, в которых участвуют персонажи 
+select count(distinct `rchat_id`) as 'Number of membered role_chats' from `character`;
+
+-- 41.(16) Показать количество чатов, где используются плагины
+select count(distinct`rchat_id`) as 'Number of role chats where plugins were used' from `using_tool`;
+
+-- 42.(17) Показать инструменты с игровыми кубиками
+select * from `tool` where `gamecube` like '%1%';
+
+-- 43.(18) Показать инструменты без игровых кубиков
+select * from `tool` where `gamecube` like '%no%';
+
+-- 44.(19) Показать инструменты со скриптами персонажей
+select * from `tool` where `scripts` like '%Character%' or '%Char%';
+
+-- 45.(20) Показать инструменты со скрипатми чата
+select * from `tool` where `scripts` like '%Chat%';
 
 -- INSERT SELECT -- 
 
