@@ -483,4 +483,9 @@ select `section` , group_concat(`forum_name`) from `forum`
 group by `section`;
 
 -- СЛОЖНЫЕ МНОГОУРОВНЕВЫЕ ЗАПРОСЫ --
--- 100.(1) Объеденить пользователей, сообщения, чаты, персонажей, фандомы, события и игровые события
+-- 100.(1) Объединить пользователей, сообщения и чаты, а затем показать сообщения, содержащие стандарное "text" и отсортированные по почте пользователей
+select * from `user`
+left join `message` on `user`.`iduser` = `message`.`user_id`
+left join `chat` on `chat_id` = `idchat`
+where `message`.`text` like 'text%'
+order by `email`;
