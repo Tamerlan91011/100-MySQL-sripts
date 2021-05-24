@@ -196,7 +196,6 @@ select `rchat_id`,`character`.`user_id` from`character` where `rchat_id`!=`user_
 
 
 -- СОЕДИНЕНИЕ ТАБЛИЦ ДЛЯ СТАТИСТИКИ И ВЫБОРКА (JOIN"ы) -- 
-
 -- 49.(1) Вывод всех сообщений, напечатанных пользователями.
 select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
 from `user` inner join `message` on `iduser` = `user_id`;
@@ -297,6 +296,7 @@ from `user`
 left join `character` on `user_id` = `iduser`
 left join `role_message` on `character_id` = `character`.`id`;
 
+
 -- ГРУППИРОВКА И СОРТИРОВКА ПО РАЗНЫМ ПРИЗНАКАМ (Group by, order by, limit) -- 
 -- 69.(1) Показать пользователей, чьи персонажи (СНАЧАЛА ЖИВЫЕ) отправляли сообщения. 
 select `date`,`user`.`name` as 'Username',`gender`,`character`.`name` as 'Char name',`life_status`,`description`,`text` as 'Message from char'
@@ -322,21 +322,91 @@ from `user` inner join `message` on `iduser` = `user_id`
 order by `date` desc;
 
 -- 73.(5) Отсортировать ролевые чаты по количеству использованных плагинов (от большего к меньшему)
--- 74.(6) Показать инструменты до 10-го номера id 
--- 75.(7) Показать ролевые чаты, где использовался самый поздний плагин с инстурментом
--- 76.(8) Показать форумы, принадлижащие первой четверти всех фандомов
--- 77.(9) Второй четверти
--- 78.(10) Третей
--- 79.(11) Четвертой
--- 80.(12) Показать форумы только выбранной категории
--- 81.(13) Показать форумы только по двум выбранным категориям
+select `rchat_id` as 'Number of role chat', count(*) as 'Sum of used plugins' 
+from `using_tool` 
+group by `rchat_id`;
+
+-- 74.(6) Показать количество символов у описания плагина и сам плагин в порядке возрастания
+select `Description`, length(`Description`) as 'Length of description' from `plugin` order by length(`Description`);
+
+-- 75.(7) Показать ролевые чаты, где использовался самый поздний плагин с инстурментом (в порядке убывания)
+select `plugin_id` as 'Number of plugin', `id` as 'Number of Role chat'
+from `using_tool` 
+right join `role_chat` on `rchat_id`=`role_chat`.`id`
+order by `plugin_id` desc;
+
+-- 76.(8) Показать первые два форума
+select * from `forum` 
+right join `fandom` on `fandom_id` = `idfandom` 
+order by `idforum` 
+limit 2;
+
+-- 77.(9) Вторые два
+select * from `forum` 
+right join `fandom` on `fandom_id` = `idfandom` 
+order by `idforum` 
+limit 2,2;
+
+-- 78.(10) Третие два
+select * from `forum` 
+right join `fandom` on `fandom_id` = `idfandom` 
+order by `idforum` 
+limit 4,2;
+
+-- 79.(11) Последующие 4
+select * from `forum` 
+right join `fandom` on `fandom_id` = `idfandom` 
+order by `idforum` 
+limit 6,4;
+
+-- 80.(12) Показать максимальную длину названия форума в каждой категории
+select `section`,max(length(`forum_name`)) as 'Symbols in longest forum name' 
+from `forum` 
+group by `section`;
+
+-- 81.(13) Показать форумы только по двум выбранным категориям и сортировать по номеру id форума
+select * from `forum` where `section` like '%Help%'
+union 
+(select * from `forum` where `section` like '%FAQ%')
+order by `idforum`;
+
 -- 82.(14) Показать форумы только по трем выбранным категориям
+
+select * from `forum` where `section` like '%Help%'
+union 
+(select * from `forum` where `section` like '%FAQ%')
+union 
+(select * from `forum` where `section` like '%Guides%')
+order by `idforum`;
+
 -- 83.(15) Показать любой форум любой категории, кроме одной
+select * from `forum` 
+where `section` not like '%Help%' group by `section`;
+
 -- 84.(16) Кроме двух 
+select * from `forum` 
+where `section`!='Help' 
+and `section`!='FAQ'
+group by `section`;
+
 -- 85.(17) Кроме трех
+select * from `forum` 
+where `section`!='Help' 
+and `section`!='FAQ' 
+and `section`!='Guides'
+group by `section`;
+
 -- 86.(18) Показать сообщения только первых двух пользователей
+select * from `message` 
+limit 2;
+
 -- 87.(19) Только первых четырех
--- 88.(20) Сообщения только первой половины пользователей
+select * from `message` 
+limit 2,2;
+
+-- 88.(20) Показать последние сообщения
+select * from `message` 
+where `date` in (select max(`date`) as 'date' from `message`) order by `user_id`;
 
 -- UNION, EXCEPT, INTERSECT --
 -- 89.(1) Показать сообщения пользователей, имя пользователей и их чаты
