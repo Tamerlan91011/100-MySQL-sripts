@@ -471,8 +471,16 @@ where `idplugin` > all
 
 -- GROUP_CONCAT И ПРОЧИЕ ФУНКЦИИ --
 -- 97.(1) Сгруппировать персонажей по пользователям
--- 98.(2) Сгруппировать события по фандомам
+select `user_id` as 'User number', group_concat(`name`) as 'Character name' from `character` 
+group by `user_id`;
+
+-- 98.(2) Показать пользователей, участвующих в событии
+select `fandom_id` , group_concat(`user_id`) as 'Members of event' from `event` 
+group by `fandom_id`;
+
 -- 99.(3) Сгруппировать форумы по категориям
- 
+select `section` , group_concat(`forum_name`) from `forum` 
+group by `section`;
+
 -- СЛОЖНЫЕ МНОГОУРОВНЕВЫЕ ЗАПРОСЫ --
 -- 100.(1) Объеденить пользователей, сообщения, чаты, персонажей, фандомы, события и игровые события
