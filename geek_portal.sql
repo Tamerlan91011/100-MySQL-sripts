@@ -4,11 +4,13 @@
 use `geek_portal`;
 select * from `article`;
 alter table `article` auto_increment = 10; 
-insert into `article` (`title`,`text`,`user_id`,`forum_id`) value ('Lifehacks in "Jojo: Golden Eye"','Bon Jiorno, my friends!...','7','9');
+insert into `article` (`title`,`text`,`user_id`,`forum_id`) 
+value ('Lifehacks in "Jojo: Golden Eye"','Bon Jiorno, my friends!...','7','9');
 
 -- 2.Добавить новый форум внутри выбранного фандома
 -- Пришлось изменить запрос, так как добавился новый фандом, но не раздел внутри уже существующего фандома
-insert into `fandom` (`idfandom`,`category`,`name`) value (11,'videogames','Jojo: Golden Eye');
+insert into `fandom` (`idfandom`,`category`,`name`) 
+value (11,'videogames','Jojo: Golden Eye');
 delete from `fandom` where `idfandom` = 11;
 alter table `fandom` auto_increment = 10;
 insert into `forum` (`idforum`,`section`,`forum_name`,`fandom_id`) value (11,'Guides','Jojo: Golden Eye',9);
@@ -31,13 +33,17 @@ where `id` = 9;
 
 -- СПРАВОЧНЫЕ ЗАПРОСЫ -- 
 -- 6.Показать новости текущего фандома (с учетом изменений имеется ввиду событие (event))
-select * from `event` where `fandom_id` = 1;
+select * from `event` 
+where `fandom_id` = 1;
 
 -- 7.Показать все новости (с учетом изменений имеется ввиду события)
-select `text`,`date`,`links`,`name` as 'Fandom name' from `event` join `fandom` where `fandom_id` = `fandom`.`idfandom`;
+select `text`,`date`,`links`,`name` as 'Fandom name' from `event` 
+join `fandom` 
+where `fandom_id` = `fandom`.`idfandom`;
 
 -- 8.Показать конкретную статью (с указанным заголовком)
-select `title`,`text` from `article` where `title` like '%Lifehacks in "Jojo: Golden Eye%';
+select `title`,`text` from `article` 
+where `title` like '%Lifehacks in "Jojo: Golden Eye%';
 
 -- 9.Показать описание плагина (мы выбираем номер плагина и по нему смотрим описание)
 -- Описанием здесь считается команда и его скрипт
@@ -46,16 +52,15 @@ FROM `plugin`
 join `tool` on `idplugin` = `plugin_id`;
 
 -- 10. Показать игровые события (и всех его участников)
-SELECT `name` as 'members',`title`,`description` 
-FROM `members_of_role_game_event`
+SELECT `name` as 'members',`title`,`description` FROM `members_of_role_game_event`
 JOIN `user` on `user_id` = `iduser`
 JOIN `role_game_event` on `role_game_event_id` = `idrole_game_event`;
 
 
 -- АНАЛИТИЧЕСКИЕ ЗАПРОСЫ -- 
 -- 11. Показать, сколько статей в выбранном фандоме (Фандоме "Stell ball run")
-SELECT COUNT(*) as 'Articles in fandom',`name` 
-FROM `forum` join `fandom` on `fandom_id` = `idfandom`
+SELECT COUNT(*) as 'Articles in fandom',`name` FROM `forum` 
+join `fandom` on `fandom_id` = `idfandom`
 where 
 `fandom_id`=9;
 
@@ -63,11 +68,9 @@ where
 SELECT COUNT(*) as 'Sum of articles' FROM `article`;
 
 -- 13. Сколько пользователей выбранного пола (вместо "Показать всех активных пользователей")
-SELECT COUNT(*) as 'Males'
-FROM `user`
+SELECT COUNT(*) as 'Males'FROM `user`
 where `gender` = 'M';
-SELECT COUNT(*) as 'Females'
-FROM `user`
+SELECT COUNT(*) as 'Females'FROM `user`
 where `gender` = 'F';
 
 -- 14. Среднее количество подключенных плагинов на один чат
@@ -131,16 +134,20 @@ select * from `message` where monthname(`date`) = 'January';
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
 
 -- 29.(4) просмотр всех сообщений, где есть hello
-select * from `message` where `text` like '%hello%';
+select * from `message` 
+where `text` like '%hello%';
 
 -- 30.(5) Убрать все повторяющиеся статьи и показать их текст с названием.
-select distinct `title`,`text` from `article` order by `title`,`text`;
+select distinct `title`,`text` from `article` 
+order by `title`,`text`;
 
 -- 31.(6) Показать события со ссылками
-select * from `event` where `links` is not null;
+select * from `event` 
+where `links` is not null;
 
 -- 32.(7) Показать события без ссылок
-select * from `event` where `links` is null;
+select * from `event` 
+where `links` is null;
 
 -- 33.(8) Показать уникальные ролевые сообщения 
 select distinct `text` from `role_message`;
@@ -149,19 +156,23 @@ select distinct `text` from `role_message`;
 select distinct `description` from `role_game_event`;
 
 -- 35.(10) Показать уникальные категории внутри фандома
-select distinct `section`,`fandom_id` from `forum` order by `fandom_id`,`section`;
+select distinct `section`,`fandom_id` from `forum` 
+order by `fandom_id`,`section`;
 
 -- 36.(11) Показать категории на форумах
-select distinct `section` from `forum` order by `section`;
+select distinct `section` from `forum` 
+order by `section`;
 
 -- 37.(12) Показать форумы с названиями, в которых встречается словосочетание "How to"
-select * from `forum` where `forum_name` like '%how to%';
+select * from `forum` 
+where `forum_name` like '%how to%';
 
 -- 38.(13) Показать сколько пользователей создавало персонажей
 select count(distinct `user_id`) as 'Number of users who created character' from `character`; 
 
 -- 39.(14) Показать персонажей с уникальным описанием (не содержащим text)
-select * from `character` where `description` not like '%text%';
+select * from `character` 
+where `description` not like '%text%';
 
 -- 40.(15) Показать количество ролевых чатов, в которых участвуют персонажи 
 select count(distinct `rchat_id`) as 'Number of membered role_chats' from `character`;
@@ -170,21 +181,26 @@ select count(distinct `rchat_id`) as 'Number of membered role_chats' from `chara
 select count(distinct`rchat_id`) as 'Number of role chats where plugins were used' from `using_tool`;
 
 -- 42.(17) Показать инструменты с игровыми кубиками
-select * from `tool` where `gamecube` like '%1%';
+select * from `tool` 
+where `gamecube` like '%1%';
 
 -- 43.(18) Показать инструменты без игровых кубиков
-select * from `tool` where `gamecube` like '%no%';
+select * from `tool` 
+where `gamecube` like '%no%';
 
 -- 44.(19) Показать инструменты со скриптами персонажей
-select * from `tool` where `scripts` like '%Character%' or '%Char%';
+select * from `tool` 
+where `scripts` like '%Character%' or '%Char%';
 
 -- 45.(20) Показать инструменты со скрипатми чата
-select * from `tool` where `scripts` like '%Chat%';
+select * from `tool` 
+where `scripts` like '%Chat%';
 
 -- INSERT SELECT -- 
 
 -- 46.(1) Копирование скриптов в описание новых плагинов
-insert into `plugin`(`description`) select `scripts` from `tool`;
+insert into `plugin`(`description`) 
+select `scripts` from `tool`;
 
 -- 47.(2) копирование описания персонажей в сообщения
 insert into `message`(`text`,`user_id`,`chat_id`,`date`) 
@@ -197,83 +213,81 @@ select `rchat_id`,`character`.`user_id` from`character` where `rchat_id`!=`user_
 
 -- СОЕДИНЕНИЕ ТАБЛИЦ ДЛЯ СТАТИСТИКИ И ВЫБОРКА (JOIN"ы) -- 
 -- 49.(1) Вывод всех сообщений, напечатанных пользователями.
-select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
-from `user` inner join `message` on `iduser` = `user_id`;
+select `iduser`,`name`,`gender`,`date`,`text` as 'Message' from `user` 
+inner join `message` on `iduser` = `user_id`;
 
 -- 50.(2) Показ сообщений, напечатанных конкретным пользователем.
-select `iduser`,`name`,`gender`,`date`,`text` 
-from `user` join `message` on `iduser` = `user_id` 
+select `iduser`,`name`,`gender`,`date`,`text` from `user` 
+join `message` on `iduser` = `user_id` 
 where  `iduser`=4; 
 
 -- 51.(3) Показать пользователей, которые создавали и не создавали персонажей
-select * from `user` left join `character` on `user_id` = `iduser`;
+select * from `user` 
+left join `character` on `user_id` = `iduser`;
 
 -- 52.(4) Показать пользователей, убивших своих персонажей
-select `email`,`user`.`name` as 'Username',`gender`,`rchat_id`,`character`.`name` as 'char_name',`life_status`,`description`
-from `user` 
+select `email`,`user`.`name` as 'Username',`gender`,`rchat_id`,`character`.`name` as 'char_name',`life_status`,`description` from `user` 
 right join `character` on `iduser` = `user_id` 
 and `life_status` =0;
 
 -- 53.(5) Показать пользователей, кто записал системные инициалы персонажа (символ С и порядковый номер)
-select * from `user` left join `character` on `iduser` = `user_id` and `initials` like '%C%';
+select * from `user` 
+left join `character` on `iduser` = `user_id` 
+and `initials` like '%C%';
 
 -- 54.(6) Показать, в каких чатах обитают персонажи
-select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name` 
-from `character` right join `chat` on `rchat_id`=`idchat`
+select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name` from `character` 
+right join `chat` on `rchat_id`=`idchat`
 union
-(select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name`  
-from `character` left join `chat` on `rchat_id` = `idchat`);
+(select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name`  from `character` 
+left join `chat` on `rchat_id` = `idchat`);
 
 -- 55.(7) Показать, в каких чатах участвуют пользователи
-select * from `user` left join `chat_members` on `user_id`=`iduser`;
+select * from `user` 
+left join `chat_members` on `user_id`=`iduser`;
 
 -- 56.(8) Показать, в каких событиях участвуют пользователи
-select * from `event` right join `user` on `user_id` = `iduser`;
+select * from `event` 
+right join `user` on `user_id` = `iduser`;
 
 -- 57.(9) К каким фандомам относятся события
-select * from `event` right join `fandom` on `fandom_id` = `idfandom`;
+select * from `event` 
+right join `fandom` on `fandom_id` = `idfandom`;
 
 -- 58.(10) К каким событиям, а соответсвенно фандомам относятся пользователи
-select `fandom_id`,`date`,`links`,`text`,`user`.`name` as 'User name',`idfandom`,`category`,`fandom`.`name` as 'Fandom name' 
-from `event` 
+select `fandom_id`,`date`,`links`,`text`,`user`.`name` as 'User name',`idfandom`,`category`,`fandom`.`name` as 'Fandom name' from `event` 
 right join `user` on `iduser` = `user_id`
 right join `fandom` on `fandom_id` = `idfandom`;
 
 -- 59.(11) Показать к каким фандомам относятся форумы
-select `section`,`forum_name`,`category`,`name` as 'Fandom name' 
-from `forum` 
+select `section`,`forum_name`,`category`,`name` as 'Fandom name' from `forum` 
 right join `fandom` on `fandom_id` = `idfandom`;
 
 -- 60.(12) Показать к каким форумам относяться статьи
-select `date`,`title` as 'Article title',`links`,`section`,`forum_name` 
-from `article` 
+select `date`,`title` as 'Article title',`links`,`section`,`forum_name` from `article` 
 right join `forum` on `forum_id` = `idforum`;
 
 -- 61.(13) Показать чаты, где используются плагины
-select `id` as 'RoleChat ID',`idplugin`,`Description`
-from `role_chat` 
+select `id` as 'RoleChat ID',`idplugin`,`Description` from `role_chat` 
 right join `using_tool` on `role_chat`.id = `using_tool`.rchat_id
 right join `plugin` on `using_tool`.`plugin_id` = `idplugin`;
 
 -- 62.(14) Показать какие инструменты используются в плагинах
-select `Description`, `commands`,`gamecube`,`scripts`
-from `plugin`
+select `Description`, `commands`,`gamecube`,`scripts` from `plugin`
 left join `tool` on `idplugin` = `plugin_id`;
 
 -- 63.(15) Показать на каких фандомах основы ролевые чаты
-select `id` as 'Rolechat id',`category`,`name` as 'Fandom name'
-from `role_chat`
+select `id` as 'Rolechat id',`category`,`name` as 'Fandom name' from `role_chat`
 right join `fandom_based_rchats` on `role_chat`.`id` = `fandom_based_rchats`.`rchat_id`
 right join `fandom` on `fandom_id` = `idfandom`;
 
 -- 64.(16) Показать СООБЩЕНИЯ, которые отсылались в ролевых чатах, основанных на фандомах
-select `date`,`text` as 'Message',`category`,`name` as 'Fandomname'
-from `message` 
+select `date`,`text` as 'Message',`category`,`name` as 'Fandomname' from `message` 
 right join `fandom_based_rchats` on `rchat_id`=`chat_id`
 right join `fandom` on `fandom_id`=`idfandom`;
 
 -- 65.(17) Показать ПОЛЬЗОВАТЕЛЯ и его СООБЩЕНИЯ в чатах, основанных на фандомах
-select `chat_id` as 'Number of chat',`date`,`user`.`name` as 'Username',`gender`,`text` as 'Text of message',`fandom`.`name` as 'Fandom name',`category`
+select `chat_id` as 'Number of chat',`date`,`user`.`name` as 'Username',`gender`,`text` as 'Text of message',`fandom`.`name` as 'Fandom name',`category` 
 from `message` 
 right join `fandom_based_rchats` on `rchat_id`=`chat_id`
 right join `fandom` on `fandom_id`=`idfandom`
@@ -286,8 +300,7 @@ right join `forum` on `forum_id`=`idforum`
 right join `fandom` on `fandom_id` = `idfandom`;
 
 -- 67.(19) Показать сообщения, набранные персонажами
-select `date`,`character`.`name` as 'Name if character',`life_status`,`description`, `text` as 'Character message'
-from `character`
+select `date`,`character`.`name` as 'Name if character',`life_status`,`description`, `text` as 'Character message' from `character`
 left join `role_message` on `character_id` = `character`.`id`;
 
 -- 68.(20) Показать пользователей, чьи персонажи отправляли сообщения
@@ -306,32 +319,30 @@ left join `role_message` on `character_id` = `character`.`id`
 order by `life_status` desc;
 
 -- 70.(2) Показать сообщения сначала убитых, а потом живых персонажей
-select `date`,`character`.`name` as 'Name if character',`life_status`,`description`, `text` as 'Character message'
-from `character`
+select `date`,`character`.`name` as 'Name if character',`life_status`,`description`, `text` as 'Character message' from `character`
 left join `role_message` on `character_id` = `character`.`id`
 order by `life_status`;
 
 -- 71.(3) Показать сначала старые, затем новые сообщения пользователей
-select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
-from `user` inner join `message` on `iduser` = `user_id`
+select `iduser`,`name`,`gender`,`date`,`text` as 'Message' from `user` 
+inner join `message` on `iduser` = `user_id`
 order by `date`;
 
 -- 72.(4) Показать новые, а затем старые сообщения пользователей
-select `iduser`,`name`,`gender`,`date`,`text` as 'Message' 
-from `user` inner join `message` on `iduser` = `user_id`
+select `iduser`,`name`,`gender`,`date`,`text` as 'Message' from `user` 
+inner join `message` on `iduser` = `user_id`
 order by `date` desc;
 
 -- 73.(5) Отсортировать ролевые чаты по количеству использованных плагинов (от большего к меньшему)
-select `rchat_id` as 'Number of role chat', count(*) as 'Sum of used plugins' 
-from `using_tool` 
+select `rchat_id` as 'Number of role chat', count(*) as 'Sum of used plugins' from `using_tool` 
 group by `rchat_id`;
 
 -- 74.(6) Показать количество символов у описания плагина и сам плагин в порядке возрастания
-select `Description`, length(`Description`) as 'Length of description' from `plugin` order by length(`Description`);
+select `Description`, length(`Description`) as 'Length of description' from `plugin` 
+order by length(`Description`);
 
 -- 75.(7) Показать ролевые чаты, где использовался самый поздний плагин с инстурментом (в порядке убывания)
-select `plugin_id` as 'Number of plugin', `id` as 'Number of Role chat'
-from `using_tool` 
+select `plugin_id` as 'Number of plugin', `id` as 'Number of Role chat' from `using_tool` 
 right join `role_chat` on `rchat_id`=`role_chat`.`id`
 order by `plugin_id` desc;
 
@@ -360,14 +371,15 @@ order by `idforum`
 limit 6,4;
 
 -- 80.(12) Показать максимальную длину названия форума в каждой категории
-select `section`,max(length(`forum_name`)) as 'Symbols in longest forum name' 
-from `forum` 
+select `section`,max(length(`forum_name`)) as 'Symbols in longest forum name' from `forum` 
 group by `section`;
 
 -- 81.(13) Показать форумы только по двум выбранным категориям и сортировать по номеру id форума
-select * from `forum` where `section` like '%Help%'
+select * from `forum` 
+where `section` like '%Help%'
 union 
-(select * from `forum` where `section` like '%FAQ%')
+(select * from `forum` 
+where `section` like '%FAQ%')
 order by `idforum`;
 
 -- 82.(14) Показать форумы только по трем выбранным категориям
@@ -406,7 +418,8 @@ limit 2,2;
 
 -- 88.(20) Показать последние сообщения
 select * from `message` 
-where `date` in (select max(`date`) as 'date' from `message`) order by `user_id`;
+where `date` in (select max(`date`) as 'date' from `message`) 
+order by `user_id`;
 
 -- UNION, EXCEPT, INTERSECT --
 -- 89.(1) Показать сообщения пользователей, имя пользователей и их чаты
