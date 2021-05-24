@@ -422,11 +422,33 @@ where `date` in (select max(`date`) as 'date' from `message`)
 order by `user_id`;
 
 -- UNION, EXCEPT, INTERSECT --
--- 89.(1) Показать сообщения пользователей, имя пользователей и их чаты
--- 90.(2) Показать форумы вместе с фандомами
--- 91.(3) Показать все, что есть в первой, но нет во второй таблице
--- 92.(4) Показать что-то, что есть и в первой и второй таблицах
--- 93.(5) Объедиить ролевые чаты, плагины, пользователей и персонажей
+-- 89.(1) Показать сообщения из выбранных чатов
+select * from `message` 
+where `chat_id` = 1
+union
+select * from `message`
+where `chat_id` = 2;
+
+-- 90.(2) Показать пользователей, которые не писали сообщений 
+-- Имитация EXCEPT
+select * from `user` 
+where `iduser` not in 
+(select `user_id` from `message`);
+
+-- 91.(3) Показать пользователей, который писали сообщения
+select * from `user` 
+where `iduser` in 
+(select `user_id` from `message`);
+
+-- 92.(4) Показать фандомы, по которым нету форумов
+select * from `fandom` 
+where `idfandom` not in 
+(select `fandom_id` from `forum`);
+
+-- 93.(5) Показать фандомы, по которым есть форумы
+select * from `fandom` 
+where `idfandom` in 
+(select `fandom_id` from `forum`);
 
 -- ВЫБОРКА С ALL, ANY, EXISTS -- 
 -- 94.(1) Показать пользователей, кто оставил ссылку в событии 
