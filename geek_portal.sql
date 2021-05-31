@@ -376,24 +376,26 @@ group by `section`;
 
 -- 81.(13) Показать форумы только по двум выбранным категориям и сортировать по номеру id форума
 select * from `forum` 
-where `section` like '%Help%'
+where `section` = 'Help' -- Ранее было: like '%Help%'
 union 
 (select * from `forum` 
-where `section` like '%FAQ%')
+where `section` = 'FAQ') -- Ранее было: like '%FAQ%'
 order by `idforum`;
+
+create index section_id on `forum`(`section`);
 
 -- 82.(14) Показать форумы только по трем выбранным категориям
 
-select * from `forum` where `section` like '%Help%'
+select * from `forum` where `section` = 'Help' -- Ранее было: like '%Help%'
 union 
-(select * from `forum` where `section` like '%FAQ%')
+(select * from `forum` where `section` = 'FAQ') -- Ранее было: like '%FAQ%'
 union 
-(select * from `forum` where `section` like '%Guides%')
+(select * from `forum` where `section` = 'Guides') -- Ранее было: '%Guides%'
 order by `idforum`;
 
 -- 83.(15) Показать любой форум любой категории, кроме одной
 select * from `forum` 
-where `section` not like '%Help%' group by `section`;
+where `section` not like 'Help' group by `section`;
 
 -- 84.(16) Кроме двух 
 select * from `forum` 
@@ -483,9 +485,11 @@ select `section` , group_concat(`forum_name`) from `forum`
 group by `section`;
 
 -- СЛОЖНЫЕ МНОГОУРОВНЕВЫЕ ЗАПРОСЫ --
--- 100.(1) Объединить пользователей, сообщения и чаты, а затем показать сообщения, содержащие стандарное "text" и отсортированные по почте пользователей
+-- 100.(1) Объединить пользователей, сообщения и чаты, а затем показать пользователей, чье имя начинается на А, и отсооритровать все это по почте
 select * from `user`
 left join `message` on `user`.`iduser` = `message`.`user_id`
-left join `chat` on `chat_id` = `idchat`
-where `message`.`text` like 'text%'
+left join `chat` on `chat`.`idchat` = `message`.`chat_id`
+where `user`.`name` like 'A%'
 order by `email`;
+
+create index name_idx on `user`(`name`);
