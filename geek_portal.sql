@@ -233,11 +233,11 @@ and `life_status` =0;
 -- 53.(5) Показать пользователей, кто записал системные инициалы персонажа (символ С и порядковый номер)
 select * from `user` 
 left join `character` on `iduser` = `user_id` 
-and `initials` like '%C%';
+and `initials` like 'C%';
 
 -- 54.(6) Показать, в каких чатах обитают персонажи
 select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name` from `character` 
-right join `chat` on `rchat_id`=`idchat`
+left join `chat` on `rchat_id`=`idchat`
 union
 (select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name`  from `character` 
 left join `chat` on `rchat_id` = `idchat`);
@@ -270,7 +270,7 @@ right join `forum` on `forum_id` = `idforum`;
 -- 61.(13) Показать чаты, где используются плагины
 select `id` as 'RoleChat ID',`idplugin`,`Description` from `role_chat` 
 right join `using_tool` on `role_chat`.id = `using_tool`.rchat_id
-right join `plugin` on `using_tool`.`plugin_id` = `idplugin`;
+left join `plugin` on `using_tool`.`plugin_id` = `idplugin`;
 
 -- 62.(14) Показать какие инструменты используются в плагинах
 select `Description`, `commands`,`gamecube`,`scripts` from `plugin`
@@ -279,18 +279,18 @@ left join `tool` on `idplugin` = `plugin_id`;
 -- 63.(15) Показать на каких фандомах основы ролевые чаты
 select `id` as 'Rolechat id',`category`,`name` as 'Fandom name' from `role_chat`
 right join `fandom_based_rchats` on `role_chat`.`id` = `fandom_based_rchats`.`rchat_id`
-right join `fandom` on `fandom_id` = `idfandom`;
+left join `fandom` on `fandom_id` = `idfandom`;
 
 -- 64.(16) Показать СООБЩЕНИЯ, которые отсылались в ролевых чатах, основанных на фандомах
 select `date`,`text` as 'Message',`category`,`name` as 'Fandomname' from `message` 
 right join `fandom_based_rchats` on `rchat_id`=`chat_id`
-right join `fandom` on `fandom_id`=`idfandom`;
+left join `fandom` on `fandom_id`=`idfandom`;
 
 -- 65.(17) Показать ПОЛЬЗОВАТЕЛЯ и его СООБЩЕНИЯ в чатах, основанных на фандомах
 select `chat_id` as 'Number of chat',`date`,`user`.`name` as 'Username',`gender`,`text` as 'Text of message',`fandom`.`name` as 'Fandom name',`category` 
 from `message` 
 right join `fandom_based_rchats` on `rchat_id`=`chat_id`
-right join `fandom` on `fandom_id`=`idfandom`
+left join `fandom` on `fandom_id`=`idfandom`
 left join `user` on `user_id` = `iduser`;
 
 -- 66.(18) Показать, к каким форумам, которые основаны на фандомах, относятся статьи
@@ -314,7 +314,7 @@ left join `role_message` on `character_id` = `character`.`id`;
 -- 69.(1) Показать пользователей, чьи персонажи (СНАЧАЛА ЖИВЫЕ) отправляли сообщения. 
 select `date`,`user`.`name` as 'Username',`gender`,`character`.`name` as 'Char name',`life_status`,`description`,`text` as 'Message from char'
 from `user`
-left join `character` on `user_id` = `iduser`
+right join `character` on `user_id` = `iduser`
 left join `role_message` on `character_id` = `character`.`id`
 order by `life_status` desc;
 
@@ -437,7 +437,7 @@ select * from `user`
 where `iduser` not in 
 (select `user_id` from `message`);
 
--- 91.(3) Показать пользователей, который писали сообщения
+-- 91.(3) Показать пользователей, которые писали сообщения
 select * from `user` 
 where `iduser` in 
 (select `user_id` from `message`);
