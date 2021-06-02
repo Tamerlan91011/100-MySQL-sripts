@@ -493,3 +493,38 @@ where `user`.`name` like 'A%'
 order by `email`;
 
 create index name_idx on `user`(`name`);
+
+
+-- ЗАДАНИЕ НА ОТЧЕТ -- 
+-- 1. Для заданного ролевого чата вывести последние (с 5-го по 10-е число) сообщения, 
+-- также показать какому персонажу принадлежат эти сообщения, и к какому он относится фандому (перс - юзер - сообщение - фандом)
+select `user_id`,`role_chat`.`id` as 'Rolechat id',
+`role_message`.`id` as 'Role message id',
+`character_id`,
+`character`.`name` as 'Character name',
+`initials`,
+`life_status`,
+`description`,
+`date` as 'Date of rolemessage',
+`text`, 
+`user`.`name` as 'Username',
+`email`,
+`gender`,
+`fandom`.`idfandom` as 'Number of fandom',
+`fandom`.`name` as 'Fandom name',
+`category`
+from `role_chat`
+right join `role_message` on `role_message`.`rchat_id` = `role_chat`.`id`
+right join `character` on `character`.`id`=`role_message`.`character_id`
+right join `user` on `character`.`user_id` = `user`.`iduser`
+right join `fandom_based_rchats` on `role_chat`.`id` = `fandom_based_rchats`.`fandom_id`
+right join `fandom` on `fandom`.`idfandom`=`fandom_based_rchats`.`fandom_id`
+where `role_chat`.`id` = 2;
+
+-- 2. Топ 5 фандомов по количеству проведенных событий.
+select `fandom_id` as 'ID number of fandoms', count(*) as 'Sum of event' from `event` 
+group by `fandom_id`
+order by count(*) desc
+limit 5;
+
+-- 3. Для каждого форума вывести среднее количество пользователей в нем (уникальны). или среднее количество сообщений от пользователей
