@@ -240,7 +240,7 @@ select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`c
 left join `chat` on `rchat_id`=`idchat`
 union
 (select `rchat_id`,`user_id`,`name` as 'Character name',`life_status`,`idchat`,`chat_name`  from `character` 
-left join `chat` on `rchat_id` = `idchat`);
+right join `chat` on `rchat_id` = `idchat`);
 
 -- 55.(7) Показать, в каких чатах участвуют пользователи
 select * from `user` 
