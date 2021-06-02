@@ -514,17 +514,23 @@ select `user_id`,`role_chat`.`id` as 'Rolechat id',
 `fandom`.`name` as 'Fandom name',
 `category`
 from `role_chat`
-right join `role_message` on `role_message`.`rchat_id` = `role_chat`.`id`
-right join `character` on `character`.`id`=`role_message`.`character_id`
-right join `user` on `character`.`user_id` = `user`.`iduser`
-right join `fandom_based_rchats` on `role_chat`.`id` = `fandom_based_rchats`.`fandom_id`
-right join `fandom` on `fandom`.`idfandom`=`fandom_based_rchats`.`fandom_id`
+ join `role_message` on `role_message`.`rchat_id` = `role_chat`.`id`
+ join `character` on `character`.`id`=`role_message`.`character_id`
+ join `user` on `character`.`user_id` = `user`.`iduser`
+ join `fandom_based_rchats` on `role_chat`.`id` = `fandom_based_rchats`.`rchat_id`
+ join `fandom` on `fandom`.`idfandom`=`fandom_based_rchats`.`fandom_id`
 where `role_chat`.`id` = 2;
 
 -- 2. Топ 5 фандомов по количеству проведенных событий.
-select `fandom_id` as 'ID number of fandoms', count(*) as 'Sum of event' from `event` 
+select `fandom`.name, count(*) as 'Sum of event' from `event` 
+ join `fandom` on `fandom`.`idfandom`=`fandom_id`
 group by `fandom_id`
 order by count(*) desc
 limit 5;
 
--- 3. Для каждого форума вывести среднее количество пользователей в нем (уникальны). или среднее количество сообщений от пользователей
+-- 3. Для каждого форума вывести среднее количество статей в день. 
+-- (или среднее количество сообщений от пользователей)
+select distinct `forum_id`,count(`date`)/count(distinct `date`) as 'Avrg number of articles in day', `forum_name`,`section`
+from `article` 
+join `forum` on `article`.`forum_id`=`forum`.`idforum`
+group by `forum_id`;
