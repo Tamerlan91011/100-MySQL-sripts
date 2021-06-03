@@ -545,6 +545,19 @@ from `article`
 join `forum` on `article`.`forum_id`=`forum`.`idforum`
 group by `forum_id`;
 
+select 
+	forum_id, forum.forum_name, avg(forum_articles_per_day.count_per_day)
+from
+(
+	select forum_id, `article`.date as group_date, count(*) as count_per_day
+	from `article` 
+	join `forum` on `article`.`forum_id`=`forum`.`idforum`
+	group by forum_id, `article`.date
+) as forum_articles_per_day
+join forum on forum_articles_per_day.forum_id = forum.idforum
+ group by forum_articles_per_day.`forum_id`
+ order by avg(forum_articles_per_day.count_per_day) desc;
+
 -- ВЫЗОВ ПРОЦЕДУР И ФУНКЦИЙ -- 
 -- ПРОЦЕДУРЫ -- 
 call GetUsers('Adam');

@@ -1,4 +1,5 @@
 -- ПРОЦЕДУРЫ -- 
+-- МОДА: Процедура с out 
 -- 1. Показать всех пользователей
 DELIMITER $$
 drop procedure GetUsers;
@@ -53,6 +54,19 @@ begin
     order by `date`;
     end//
 -- ФУНКЦИИ -- 
--- 1. 
--- 2.
--- 3.
+-- 1. Посчитать количество форумов в указанном фандоме 
+delimiter //
+drop function GetSumOfForumsInFandom;
+//
+call GetSumOfForumsInFandom();
+//
+create function GetSumOfForumsInFandom(`chosen_fandom` int)
+returns int
+begin
+	declare `sum` int;
+    set `sum`=0; 
+    
+    return `sum`; 
+end //
+-- 2. Посчитать количество статей в указанном форуме
+-- 3. Посчитать количество статей в указанном фандоме
