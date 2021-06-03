@@ -1,4 +1,4 @@
-# 100 MySQL Scripts 
+# MySQL Scripts 
 ## Database: Geek Portal (made with MySQL Workbench 8.0 CE)
 
 Made by student of IVT-262 group:
