@@ -547,6 +547,6 @@ group by `forum_id`;
 
 -- ВЫЗОВ ПРОЦЕДУР И ФУНКЦИЙ -- 
 -- ПРОЦЕДУРЫ -- 
-call GetUser;
-call GetCharacters;
-call GetEvents;
+call GetUsers('Adam');
+call GetCharacters(0);
+call GetEvents('2020-05-30');
