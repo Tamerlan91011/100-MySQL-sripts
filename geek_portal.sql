@@ -73,6 +73,9 @@ where `gender` = 'M';
 SELECT COUNT(*) as 'Females'FROM `user`
 where `gender` = 'F';
 
+create index `gender_idx` on `user`(`gender`);
+alter table `user` drop index `gender_idx`;
+
 -- 14. Среднее количество подключенных плагинов на один чат
 select count(`rchat_id`)/count(distinct `rchat_id`) from `using_tool`;
 
@@ -111,10 +114,13 @@ WHERE (`idchat` = '10');
 delete from `message` where `idmessage` =10;
 
 -- 22.(2) Удалить статьи, чьи заголовки содержат слово "Text"
-delete from `article` where `title` like '%Text%';
+delete from `article` where `title` = 'Text';
+
+create index `title_idx` on `article`(`title`);
+alter table `article` drop index `title_idx`;
 
 -- 23.(3) Удалить события, чье содержание стандартно
-delete from `event` where `text` like '%Welcome to the Our Event!%';
+delete from `event` where `text` = 'Welcome to the Our Event!';
 
 -- 24.(4) Удалить статьи без ссылок
 delete from `article` where `links` is null;
@@ -125,10 +131,13 @@ delete from `message` where `text` like '%text%';
 
 -- SELECT, DISTINCT, WHERE --
 -- 26.(1) просмотр сообщений за 2001 год
-select * from `message` where `date` like '%2001%';
+select * from `message` where `date` like '2001%';
 
 -- 27.(2) за январь
 select * from `message` where monthname(`date`) = 'January';
+
+create index `date_idx` on `message`(`date`);
+alter table `message` drop index `date_idx`;
 
 -- 28.(3) написание сообщения
 insert into `message` (`user_id`,`chat_id`,`date`,`text`) values(6,9,now(),'Timur is here');
@@ -382,8 +391,8 @@ union
 where `section` = 'FAQ') -- Ранее было: like '%FAQ%'
 order by `idforum`;
 
-create index section_id on `forum`(`section`);
-
+create index section_idx on `forum`(`section`);
+ALTER TABLE `forum` DROP INDEX `section_idx` ;
 -- 82.(14) Показать форумы только по трем выбранным категориям
 
 select * from `forum` where `section` = 'Help' -- Ранее было: like '%Help%'
@@ -493,7 +502,8 @@ where `user`.`name` like 'A%'
 order by `email`;
 
 create index name_idx on `user`(`name`);
-
+ALTER TABLE `user` 
+DROP INDEX `name_idx` ;
 
 -- ЗАДАНИЕ НА ОТЧЕТ -- 
 -- 1. Для заданного ролевого чата вывести последние (с 5-го по 10-е число) сообщения, 
