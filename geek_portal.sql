@@ -544,3 +544,9 @@ select distinct `forum_id`,count(`date`)/count(distinct `date`) as 'Avrg number 
 from `article` 
 join `forum` on `article`.`forum_id`=`forum`.`idforum`
 group by `forum_id`;
+
+-- ВЫЗОВ ПРОЦЕДУР И ФУНКЦИЙ -- 
+-- ПРОЦЕДУРЫ -- 
+call GetUser;
+call GetCharacters;
+call GetEvents;
