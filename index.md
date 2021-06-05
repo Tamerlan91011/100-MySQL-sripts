@@ -6,7 +6,7 @@
 
 Made by VSTU student of IVT-262 group Glazunov Timur
 
-#### MySQL Queries
+### MySQL Queries
  * 📝 [Text of scripts](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/blob/master/geek_portal.sql)
 
  * 📃 [History](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/commits/master/geek_portal.sql)
@@ -22,5 +22,5 @@ Made by VSTU student of IVT-262 group Glazunov Timur
 Made by VSTU student of IVT-262 group Glazunov Timur
 
 
-#### Project
+### Project
 * ⏳[In process]()
