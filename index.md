@@ -16,9 +16,9 @@ Made by VSTU student of IVT-262 group Glazunov Timur
 ### Statistics and more information
  * 🥇 [History of main file](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/commits/master/geek_portal.sql)
 
- * 🥈 [History of Procedures and functions](https://github.com/Tamerlan91011/MySQL-sripts/blob/master/geek_portal_procedures_and_functions.sql)
+ * 🥈 [History of Procedures and functions](https://github.com/Tamerlan91011/MySQL-sripts/commits/master/geek_portal_procedures_and_functions.sql)
 
- * 🥉 [History of Views](https://github.com/Tamerlan91011/MySQL-sripts/blob/master/geek_portal_views.sql)
+ * 🥉 [History of Views](https://github.com/Tamerlan91011/MySQL-sripts/commits/master/geek_portal_views.sql)
 
  * 💾 [Backup](https://github.com/Tamerlan91011/1620132876139--127.0.0.1-3306-geek_portal/blob/47e59f6b3801305a685b331976ea650c3f6873a4/geek_portal%20(3).sql)
 
