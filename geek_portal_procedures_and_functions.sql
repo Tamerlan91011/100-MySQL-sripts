@@ -1,11 +1,11 @@
 -- ПРОЦЕДУРЫ -- 
 -- МОДА: Процедура с out 
 -- 1. Показать всех пользователей
-DELIMITER $$
+DELIMITER //
 drop procedure GetUsers;
-$$
+//
 call GetUsers('Alex');
-$$
+//
 create procedure GetUsers(IN `UserName` varchar(255))
 begin 
 	select
@@ -16,7 +16,7 @@ begin
     `geek_portal`.`user`
     where `name`= `UserName`
     order by `name`;
-end$$;
+end//;
 
 
 -- 2. Показать персонажей, исходя из их статуса (живы, или мертвы)
@@ -53,20 +53,25 @@ begin
     where `date` = `date_of_publication`
     order by `date`;
     end//
--- ФУНКЦИИ -- 
--- 1. Посчитать количество форумов в указанном фандоме 
-delimiter //
-drop function GetSumOfForumsInFandom;
-//
-call GetSumOfForumsInFandom();
-//
-create function GetSumOfForumsInFandom(`chosen_fandom` int)
-returns int
-begin
-	declare `sum` int;
-    set `sum`=0; 
     
-    return `sum`; 
+-- ФУНКЦИИ -- 
+-- 1. Отобразить статус персонажа словами, а не цифрами.
+delimiter //
+drop function ShowCharacterLifeStatus;
+//
+create function ShowCharacterLifeStatus(`life_status` int)
+returns varchar(20)
+deterministic
+begin
+	declare `status` varchar(20);
+    if (`life_status` >= 1) then set `status` = 'Alive';
+    elseif (`life_status` <= 0) then set `status` = 'Dead';
+    end if;
+    return (`status`); 
 end //
--- 2. Посчитать количество статей в указанном форуме
--- 3. Посчитать количество статей в указанном фандоме
+
+select `name`,`initials`,`description`, ShowCharacterLifeStatus(`life_status`) as 'Status' from `character` 
+order by `name`;
+
+-- 2. Посчитать количество статей в указанном форуме и отобразить степень популярности форума
+-- 3. Посчитать количество статей в указанном фандоме и отобразить степень популярности фандома

@@ -114,7 +114,7 @@ WHERE (`idchat` = '10');
 delete from `message` where `idmessage` =10;
 
 -- 22.(2) Удалить статьи, чьи заголовки содержат слово "Text"
-delete from `article` where `title` = 'Text';
+select * from `article` where `title` = 'Text';
 
 create index `title_idx` on `article`(`title`);
 alter table `article` drop index `title_idx`;
@@ -533,7 +533,7 @@ where `role_chat`.`id` = 2;
 
 -- 2. Топ 5 фандомов по количеству проведенных событий.
 select `fandom`.name, count(*) as 'Sum of event' from `event` 
- join `fandom` on `fandom`.`idfandom`=`fandom_id`
+join `fandom` on `fandom`.`idfandom`=`fandom_id`
 group by `fandom_id`
 order by count(*) desc
 limit 5;
@@ -563,3 +563,7 @@ join forum on forum_articles_per_day.forum_id = forum.idforum
 call GetUsers('Adam');
 call GetCharacters(0);
 call GetEvents('2020-05-30');
+
+select `name`,`initials`,`description`, ShowCharacterLifeStatus(`life_status`) as 'Status' 
+from `character`
+order by `name`;
