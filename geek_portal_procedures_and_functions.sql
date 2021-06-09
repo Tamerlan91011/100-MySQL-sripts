@@ -57,6 +57,7 @@ begin
     
 -- 4. Вывести количичество статей в форуме
 
+
 -- ФУНКЦИИ -- 
 -- 1. Отобразить статус персонажа словами, а не цифрами.
 delimiter //
@@ -75,6 +76,7 @@ begin
     return (`status`); 
 end //
 
+
 -- 2. Посчитать количество статей в указанном форуме и отобразить степень популярности форума
 delimiter //
 drop function GetStatusOfForums;//
@@ -83,14 +85,14 @@ begin
     declare `status` varchar(20);
     
 	SELECT `Sum`,`forum_id` INTO @S,@F FROM
-    (SELECT `forum_id`, COUNT(`forum_id`) AS `Sum`
+    (SELECT `forum_id`, COUNT(`idarticle`) AS `Sum`
     FROM `article`
     WHERE `forum_id` = `id_of_forum`
-    GROUP BY `forum_id` ) 
+    GROUP BY `forum_id`) 
     AS `Table`;
     
     if ((@S > 0) and (@S < 10) and (@F = `id_of_forum`))
-	then set `status`='New forum';
+	then set `status`='Newbe forum';
     
     elseif (@S >= 10 and @S < 30 and (@F = `id_of_forum`)) 
 	then set `status`='Middle forum';
@@ -106,7 +108,32 @@ begin
     return (`status`);
 end //
 
-select `idforum`,`forum_name`,GetStatusOfForums(`idforum`) as 'Forum Status' from `forum`;
-//
-select @F;
+
 -- 3. Посчитать количество статей в указанном фандоме и отобразить степень популярности фандома
+delimiter //
+drop function GetStatusOfFandom;//
+create function GetStatusOfFandom (`id_of_fandom` int) returns varchar (20) deterministic
+begin 
+    declare `status` varchar(20);
+    
+	select `fandom_id`, sum(`Sum_of_A_in_Forum`) as `Sum_of_A_in_Fandom` into @Fandom, @Summ
+    from (
+	SELECT `forum_id`, count(`idarticle`) as `Sum_of_A_in_Forum`, `forum_name`,`fandom_id`
+	FROM `article` 
+	join `forum` on `forum_id`=`idforum`
+	group by `forum_id`) as `Table1` where `fandom_id`=`id_of_fandom`
+	group by `fandom_id`;
+    
+    if ((@Summ > 0) and (@Summ < 30) and (@Fandom = `id_of_fandom`))
+	then set `status`='Little';
+    
+    elseif ((@Summ >= 30) and (@Summ < 60) and (@Fandom = `id_of_fandom`))
+	then set `status`='Middle';
+    
+    elseif ((@Summ >= 60) and (@Fandom = `id_of_fandom`))
+	then set `status`='Big';
+    
+    else set `status`='No content';
+    end if;
+    return (`status`);
+end //

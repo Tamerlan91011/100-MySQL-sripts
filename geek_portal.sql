@@ -564,6 +564,21 @@ call GetUsers('Adam');
 call GetCharacters(0);
 call GetEvents('2020-05-30');
 
+-- ФУНКЦИИ -- 
 select `name`,`initials`,`description`, ShowCharacterLifeStatus(`life_status`) as 'Status' 
 from `character`
 order by `name`;
+
+select `idforum`,`forum_name`,GetStatusOfForums(`idforum`) as 'Forum Status' 
+from `forum`;
+
+-- Вызов функции 
+select `name`,`category`, GetStatusOfFandom(`idfandom`) as 'Size' from `fandom`;
+-- Вложенный запрос для проверки 
+select `fandom_id`, sum(`Sum_of_A_in_Forum`) as `Sum_of_A_in_Fandom`,`fandom`.`name` from (
+SELECT `forum_id`, count(`idarticle`) as `Sum_of_A_in_Forum`, `forum_name`,`fandom_id`
+FROM `article` 
+join `forum` on `forum_id`=`idforum`
+group by `forum_id`) as `Table1`
+join `fandom` on `fandom_id`=`idfandom`
+group by `fandom_id`;
