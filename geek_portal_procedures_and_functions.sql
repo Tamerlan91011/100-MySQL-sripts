@@ -55,7 +55,19 @@ begin
     end//
     
     
--- 4. Вывести количичество статей в форуме
+-- 4. Вывести количичество статей в указанном форуме
+DELIMITER //
+drop procedure GetSumOfArticlesInForums;
+//
+call GetSumOfArticlesInForums(1,@result);
+//
+create procedure GetSumOfArticlesInForums(in `id_of_forum` int, out `sum_of_articles`int )
+begin 
+SELECT COUNT(`idarticle`) into `sum_of_articles`
+    FROM `article`
+    WHERE `forum_id` = `id_of_forum`
+    GROUP BY `forum_id`;
+end//
 
 
 -- ФУНКЦИИ -- 
@@ -109,7 +121,7 @@ begin
 end //
 
 
--- 3. Посчитать количество статей в указанном фандоме и отобразить степень популярности фандома
+-- 3. Посчитать количество статей в указанном фандоме и отобразить размер фандома
 delimiter //
 drop function GetStatusOfFandom;//
 create function GetStatusOfFandom (`id_of_fandom` int) returns varchar (20) deterministic

@@ -560,20 +560,27 @@ join forum on forum_articles_per_day.forum_id = forum.idforum
 
 -- ВЫЗОВ ПРОЦЕДУР И ФУНКЦИЙ -- 
 -- ПРОЦЕДУРЫ -- 
-call GetUsers('Adam');
-call GetCharacters(0);
-call GetEvents('2020-05-30');
+call GetUsers('Adam'); -- 1. Показать всех пользователей
+call GetCharacters(0); -- 2. Показать персонажей, исходя из их статуса (живы, или мертвы)
+call GetEvents('2020-05-30'); -- 3. Показать события, которые были проведены в указанный день
+
+call GetSumOfArticlesInForums(1,@total); -- 4. Вывести количичество статей в указанном форуме
+select @total;
+
 
 -- ФУНКЦИИ -- 
+-- 1. Отобразить статус персонажа словами, а не цифрами.
 select `name`,`initials`,`description`, ShowCharacterLifeStatus(`life_status`) as 'Status' 
 from `character`
 order by `name`;
 
+-- 2. Посчитать количество статей (не отображать) в указанном форуме и отобразить степень популярности форума
 select `idforum`,`forum_name`,GetStatusOfForums(`idforum`) as 'Forum Status' 
 from `forum`;
 
--- Вызов функции 
+-- 3. Посчитать количество статей в указанном фандоме и отобразить размер фандома
 select `name`,`category`, GetStatusOfFandom(`idfandom`) as 'Size' from `fandom`;
+
 -- Вложенный запрос для проверки 
 select `fandom_id`, sum(`Sum_of_A_in_Forum`) as `Sum_of_A_in_Fandom`,`fandom`.`name` from (
 SELECT `forum_id`, count(`idarticle`) as `Sum_of_A_in_Forum`, `forum_name`,`fandom_id`
