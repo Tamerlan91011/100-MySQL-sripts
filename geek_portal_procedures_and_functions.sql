@@ -82,30 +82,31 @@ create function GetStatusOfForums (`id_of_forum` int) returns varchar (20) deter
 begin 
     declare `status` varchar(20);
     
-	SELECT `Sum` INTO @S FROM
+	SELECT `Sum`,`forum_id` INTO @S,@F FROM
     (SELECT `forum_id`, COUNT(`forum_id`) AS `Sum`
     FROM `article`
     WHERE `forum_id` = `id_of_forum`
     GROUP BY `forum_id` ) 
     AS `Table`;
     
-    if (@S > 0 and @S < 10) 
+    if ((@S > 0) and (@S < 10) and (@F = `id_of_forum`))
 	then set `status`='New forum';
     
-    elseif (@S >= 10 and @S < 30) 
+    elseif (@S >= 10 and @S < 30 and (@F = `id_of_forum`)) 
 	then set `status`='Middle forum';
     
-	elseif (@S >= 30 and @S < 40)
+	elseif (@S >= 30 and @S < 40 and (@F = `id_of_forum`))
     then set `status`='Lowly famous forum';
     
-    elseif (@S >= 40 and @S < 100)
+    elseif (@S >= 40 and (@F = `id_of_forum`))
     then set `status`='Higly famous forum';
-    
-    elseif (`id_of_forum` = NULL)
-    then set `status`='No articles';
+
+	else set `status`='Recently created';
     end if;
     return (`status`);
 end //
 
-select `idforum`,`forum_name`,GetStatusOfForums(`idforum`) from `forum`;
+select `idforum`,`forum_name`,GetStatusOfForums(`idforum`) as 'Forum Status' from `forum`;
+//
+select @F;
 -- 3. Посчитать количество статей в указанном фандоме и отобразить степень популярности фандома
