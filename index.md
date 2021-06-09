@@ -1,4 +1,4 @@
-# [VSTU](https://www.vstu.ru/) Course: Databases <img align="left" alt="MySQL" width="80px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/sql/sql.png"/> 
+# [VSTU](https://www.vstu.ru/) Course: Databases <img align="left" alt="MySQL" width="70px" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/sql/sql.png"/> 
 Conducted by [A.A. Sokolov](https://github.com/SashkaCosmonaut)
 <br />
 
