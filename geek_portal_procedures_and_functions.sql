@@ -54,24 +54,58 @@ begin
     order by `date`;
     end//
     
+    
+-- 4. Вывести количичество статей в форуме
+
 -- ФУНКЦИИ -- 
 -- 1. Отобразить статус персонажа словами, а не цифрами.
 delimiter //
 drop function ShowCharacterLifeStatus;
 //
-create function ShowCharacterLifeStatus(`life_status` int)
-returns varchar(20)
-deterministic
+create function ShowCharacterLifeStatus(`life_status` int) returns varchar(20) deterministic
 begin
 	declare `status` varchar(20);
-    if (`life_status` >= 1) then set `status` = 'Alive';
-    elseif (`life_status` <= 0) then set `status` = 'Dead';
+    if (`life_status` >= 1) 
+    then set `status` = 'Alive';
+    
+    elseif (`life_status` <= 0) 
+    then set `status` = 'Dead';
+    
     end if;
     return (`status`); 
 end //
 
-select `name`,`initials`,`description`, ShowCharacterLifeStatus(`life_status`) as 'Status' from `character` 
-order by `name`;
-
 -- 2. Посчитать количество статей в указанном форуме и отобразить степень популярности форума
+delimiter //
+drop function GetStatusOfForums;//
+create function GetStatusOfForums (`id_of_forum` int) returns varchar (20) deterministic
+begin 
+    declare `status` varchar(20);
+    
+	SELECT `Sum` INTO @S FROM
+    (SELECT `forum_id`, COUNT(`forum_id`) AS `Sum`
+    FROM `article`
+    WHERE `forum_id` = `id_of_forum`
+    GROUP BY `forum_id` ) 
+    AS `Table`;
+    
+    if (@S > 0 and @S < 10) 
+	then set `status`='New forum';
+    
+    elseif (@S >= 10 and @S < 30) 
+	then set `status`='Middle forum';
+    
+	elseif (@S >= 30 and @S < 40)
+    then set `status`='Lowly famous forum';
+    
+    elseif (@S >= 40 and @S < 100)
+    then set `status`='Higly famous forum';
+    
+    elseif (`id_of_forum` = NULL)
+    then set `status`='No articles';
+    end if;
+    return (`status`);
+end //
+
+select `idforum`,`forum_name`,GetStatusOfForums(`idforum`) from `forum`;
 -- 3. Посчитать количество статей в указанном фандоме и отобразить степень популярности фандома
