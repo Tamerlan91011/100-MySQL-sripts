@@ -393,8 +393,8 @@ order by `idforum`;
 
 create index section_idx on `forum`(`section`);
 ALTER TABLE `forum` DROP INDEX `section_idx` ;
--- 82.(14) Показать форумы только по трем выбранным категориям
 
+-- 82.(14) Показать форумы только по трем выбранным категориям
 select * from `forum` where `section` = 'Help' -- Ранее было: like '%Help%'
 union 
 (select * from `forum` where `section` = 'FAQ') -- Ранее было: like '%FAQ%'
@@ -589,3 +589,13 @@ join `forum` on `forum_id`=`idforum`
 group by `forum_id`) as `Table1`
 join `fandom` on `fandom_id`=`idfandom`
 group by `fandom_id`;
+
+-- ПРЕДСТАВЛЕНИЯ (VIEW) -- 
+-- 1. Среднее количество статей на форуме в день (запрос номер 3 из отчетного задания)
+select * from Avrg_Articles_Per_Day;
+
+-- 2. Топ 10 фандомов по количеству проведенных событий (запрос номер 2 из отчетного задания)
+select * from top_10_fandoms_held_events;
+
+-- 3. Показать, в каких форумах обитают персонажи (запрос номер 56 из основного задания)
+select * from chats_of_characters;
