@@ -33,3 +33,4 @@ Made by VSTU student of IVT-262 group Glazunov Timur
 
 ### Project
 * ⏳[Need to fix, but it works somehow](https://github.com/Tamerlan91011/Project_DBConnection)
+* 😅[It works correctly, but it was written really bad...Sorry for bloddy tears 🩸](https://github.com/Tamerlan91011/DBLiteConnection)
