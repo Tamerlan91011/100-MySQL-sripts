@@ -32,4 +32,4 @@ Made by VSTU student of IVT-262 group Glazunov Timur
 Made by VSTU student of IVT-262 group Glazunov Timur
 
 ### Project
-* ⏳[In process]()
+* ⏳[Need to fix, but it works somehow](https://github.com/Tamerlan91011/Project_DBConnection)
